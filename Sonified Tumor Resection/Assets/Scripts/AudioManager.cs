@@ -65,26 +65,4 @@ public class AudioManager : MonoBehaviour
             sounds[i].source.Stop();
         }
     }
-
-    public void LoopStart(string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        s.source.loop = true;
-    }
-
-    public void LoopStop(string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        s.source.loop = false;
-    }
 }
