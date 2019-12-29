@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
+//This script handles everything with playing sounds and displaying texts regarding the distance between tool tip and tumor
 public class ToolCollider : MonoBehaviour
 {
     public GameObject Tumor;

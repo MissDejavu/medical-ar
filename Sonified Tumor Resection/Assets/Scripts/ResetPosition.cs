@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
+//Reset button for getting an object back to its start and rotation position
 public class ResetPosition : MonoBehaviour
 {
     public Vector3 startPosition;

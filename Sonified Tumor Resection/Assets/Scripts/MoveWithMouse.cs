@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+//use this script to move an object with the mouse (only in x- and y-direction)
 public class MoveWithMouse : MonoBehaviour
 {
     private Vector3 mOffset;

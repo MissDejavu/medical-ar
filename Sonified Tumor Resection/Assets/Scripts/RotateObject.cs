@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+//Rotate an object with keys you like
 public class RotateObject : MonoBehaviour
 {
     public KeyCode pressUp;

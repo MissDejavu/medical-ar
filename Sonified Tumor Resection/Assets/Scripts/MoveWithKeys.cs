@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+//use this script to move an object with keys you like (only translation)
 public class MoveWithKeys : MonoBehaviour
 {
     //y axis

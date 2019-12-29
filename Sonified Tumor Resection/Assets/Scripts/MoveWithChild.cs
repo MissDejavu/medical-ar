@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+
+//use this script to get a parent object moving with its child object
 public class MoveWithChild : MonoBehaviour
 {
     [SerializeField]
