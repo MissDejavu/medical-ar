@@ -77,6 +77,7 @@ public class ToolCollider : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("NoArea");
             AlertText.color = Color.red;
             AlertText.text = "Do not cut here! You are too far away from the tumor";
+            CurrentArea.color = Color.red;
             CurrentArea.text = "No area";
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
@@ -85,6 +86,7 @@ public class ToolCollider : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("OuterErrorMargin");
             AlertText.color = Color.red;
             AlertText.text = "Do not cut here! You are too far away from the tumor";
+            CurrentArea.color = Color.red;
             CurrentArea.text = "Current area: outer error margin";
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
@@ -93,6 +95,7 @@ public class ToolCollider : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("ResectionArea");
             AlertText.color = Color.green;
             AlertText.text = "You can cut here!";
+            CurrentArea.color = Color.green;
             CurrentArea.text = "Current area: resection area";
         }
         else if (col.gameObject.CompareTag("TumorArea"))
@@ -103,6 +106,7 @@ public class ToolCollider : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("InnerErrorMargin");
             AlertText.color = Color.red;
             AlertText.text = "Do not cut here! You are too close to the tumor";
+            CurrentArea.color = Color.red;
             CurrentArea.text = "Current area: inner error margin";
         }
 

@@ -1319,11 +1319,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6f8ac57219ea304393761de77dab20d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tumor: {fileID: 0}
-  ToolTip: {fileID: 0}
-  TumorDistance: {fileID: 0}
-  AlertText: {fileID: 0}
-  CurrentArea: {fileID: 0}
+  Tumor: {fileID: 1876234668}
+  ToolTip: {fileID: 739083593}
+  TumorDistance: {fileID: 146905979}
+  AlertText: {fileID: 464693175}
+  CurrentArea: {fileID: 215490927}
 --- !u!54 &4813029348183593827
 Rigidbody:
   m_ObjectHideFlags: 0
