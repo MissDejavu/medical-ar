@@ -10,6 +10,8 @@ public class RotateObject : MonoBehaviour
     public KeyCode pressForward;
     public KeyCode pressBackward;
 
+    private float velocity = 5;
+
 
     // Start is called before the first frame update
     void Start()
@@ -20,29 +22,29 @@ public class RotateObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(pressLeft))
+        if (Input.GetKey(pressLeft))
         {
-            transform.Rotate(0.0f, -10, 0.0f);
+            transform.Rotate(0.0f, -5*velocity*Time.deltaTime, 0.0f);
         }
-        if (Input.GetKeyDown(pressRight))
+        if (Input.GetKey(pressRight))
         {
-            transform.Rotate(0.0f, +10, 0.0f);
+            transform.Rotate(0.0f, 5  * velocity * Time.deltaTime, 0.0f);
         }
-        if (Input.GetKeyDown(pressForward))
+        if (Input.GetKey(pressForward))
         {
-            transform.Rotate(+10, 0.0f, 0.0f);
+            transform.Rotate(5 * velocity * Time.deltaTime, 0.0f, 0.0f);
         }
-        if (Input.GetKeyDown(pressBackward))
+        if (Input.GetKey(pressBackward))
         {
-            transform.Rotate(-10, 0.0f, 0.0f);
+            transform.Rotate(-5 * velocity * Time.deltaTime, 0.0f, 0.0f);
         }
-        if (Input.GetKeyDown(pressUp))
+        if (Input.GetKey(pressUp))
         {
-            transform.Rotate(0.0f, 0.0f, +5);
+            transform.Rotate(0.0f, 0.0f, 5 * velocity * Time.deltaTime);
         }
-        if (Input.GetKeyDown(pressDown))
+        if (Input.GetKey(pressDown))
         {
-            transform.Rotate(0.0f, 0.0f, -5);
+            transform.Rotate(0.0f, 0.0f, -5 * velocity * Time.deltaTime);
         }
     }
 }
