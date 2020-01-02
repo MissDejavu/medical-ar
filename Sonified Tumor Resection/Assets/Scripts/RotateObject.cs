@@ -10,8 +10,8 @@ public class RotateObject : MonoBehaviour
     public KeyCode pressForward;
     public KeyCode pressBackward;
 
-    private float velocity = 5;
 
+    private float velocity = 5;
 
     // Start is called before the first frame update
     void Start()
