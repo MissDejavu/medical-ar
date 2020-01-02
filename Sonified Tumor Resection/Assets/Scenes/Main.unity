@@ -1396,12 +1396,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97edb8d9905d3d7478494b031821601a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pressUp: 119
-  pressDown: 115
-  pressLeft: 100
-  pressRight: 97
-  pressForward: 113
-  pressBackward: 101
+  pressUp: 264
+  pressDown: 261
+  pressLeft: 262
+  pressRight: 260
+  pressForward: 265
+  pressBackward: 263
 --- !u!114 &4813029348183593832
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -24,7 +24,7 @@ public class RotateObject : MonoBehaviour
     {
         if (Input.GetKey(pressLeft))
         {
-            transform.Rotate(0.0f, -5*velocity*Time.deltaTime, 0.0f);
+            transform.Rotate(0.0f, -5 * velocity * Time.deltaTime, 0.0f);
         }
         if (Input.GetKey(pressRight))
         {
