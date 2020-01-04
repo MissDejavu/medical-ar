@@ -4,65 +4,69 @@ using UnityEngine.UI;
 //This script handles everything with playing sounds and displaying texts regarding the distance between tool tip and tumor
 public class ToolCollider : MonoBehaviour
 {
-    public GameObject Tumor;
-    public GameObject ToolTip;
-    private float _Distance;
-    private float TumorRadius;
-    public Text TumorDistance;
-    public Text AlertText;
-    public Text CurrentArea;
+    public GameObject tumor;
+    public GameObject toolTip;
+    private float _distance;
+    private float tumorRadius;
+    public Text tumorDistance;
+    public Text alertText;
+    public Text currentArea;
+    public AudioManager audioManager;
 
     void Start()
     {
-        TumorRadius = Tumor.GetComponent<SphereCollider>().radius;
-        TumorDistance.text = "";
-        AlertText.text = "";
-        CurrentArea.text = "";
+        tumor = GameObject.Find("Tumor");
+        toolTip = GameObject.Find("ToolTip");
+        tumorRadius = tumor.GetComponent<SphereCollider>().radius;
+        tumorDistance.text = "";
+        alertText.text = "";
+        currentArea.text = "";
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     void Update()
     {
-        _Distance = Vector3.Distance(Tumor.transform.position, ToolTip.transform.position);
-        _Distance -= TumorRadius;
-        TumorDistance.text = "Distance to tumor: " + _Distance;
+        _distance = Vector3.Distance(tumor.transform.position, gameObject.transform.position);
+        _distance -= tumorRadius;
+        tumorDistance.text = "Distance to tumor: " + _distance;
     }
 
     void OnTriggerEnter(Collider col)
     {
-        FindObjectOfType<AudioManager>().StopAll();
+        audioManager.StopAll();
         // start playing sound depending on the area that was entered
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            FindObjectOfType<AudioManager>().Play("OuterErrorMargin");
-            CurrentArea.color = Color.red;
-            CurrentArea.text = "Current area: outer error margin";
-            AlertText.color = Color.red;
-            AlertText.text = "Do not cut here! You are too far away from the tumor";
+            audioManager.Play("OuterErrorMargin");
+            currentArea.color = Color.red;
+            currentArea.text = "Current area: outer error margin";
+            alertText.color = Color.red;
+            alertText.text = "Do not cut here! You are too far away from the tumor";
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            FindObjectOfType<AudioManager>().Play("ResectionArea");
-            CurrentArea.color = Color.green;
-            CurrentArea.text = "Current area: resection area";
-            AlertText.color = Color.green;
-            AlertText.text = "You can cut here!";
+            audioManager.Play("ResectionArea");
+            currentArea.color = Color.green;
+            currentArea.text = "Current area: resection area";
+            alertText.color = Color.green;
+            alertText.text = "You can cut here!";
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            FindObjectOfType<AudioManager>().Play("InnerErrorMargin");
-            CurrentArea.color = Color.red;
-            CurrentArea.text = "Current area: inner error margin";
-            AlertText.color = Color.red;
-            AlertText.text = "Do not cut here! You are too close to the tumor";
+            audioManager.Play("InnerErrorMargin");
+            currentArea.color = Color.red;
+            currentArea.text = "Current area: inner error margin";
+            alertText.color = Color.red;
+            alertText.text = "Do not cut here! You are too close to the tumor";
         }
-        else if (col.gameObject.CompareTag("TumorArea"))
+        else if (col.gameObject.CompareTag("Tumor"))
         {
-            FindObjectOfType<AudioManager>().LoopStart("TumorArea");
-            FindObjectOfType<AudioManager>().Play("TumorArea");
-            CurrentArea.color = Color.red;
-            CurrentArea.text = "Current area: tumor area";
-            AlertText.color = Color.red;
-            AlertText.text = "Attention! You touched the tumor!";
+            audioManager.LoopStart("Tumor");
+            FindObjectOfType<AudioManager>().Play("Tumor");
+            currentArea.color = Color.red;
+            currentArea.text = "Current area: tumor area";
+            alertText.color = Color.red;
+            alertText.text = "Attention! You touched the tumor!";
         }
 
     }
@@ -73,41 +77,41 @@ public class ToolCollider : MonoBehaviour
         // stop sound depending on the area that was exited
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            FindObjectOfType<AudioManager>().Stop("OuterErrorMargin");
-            FindObjectOfType<AudioManager>().Play("NoArea");
-            AlertText.color = Color.red;
-            AlertText.text = "Do not cut here! You are too far away from the tumor";
-            CurrentArea.color = Color.red;
-            CurrentArea.text = "No area";
+            audioManager.Stop("OuterErrorMargin");
+            audioManager.Play("NoArea");
+            alertText.color = Color.red;
+            alertText.text = "Do not cut here! You are too far away from the tumor";
+            currentArea.color = Color.red;
+            currentArea.text = "No area";
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            FindObjectOfType<AudioManager>().Stop("ResectionArea");
-            FindObjectOfType<AudioManager>().Play("OuterErrorMargin");
-            AlertText.color = Color.red;
-            AlertText.text = "Do not cut here! You are too far away from the tumor";
-            CurrentArea.color = Color.red;
-            CurrentArea.text = "Current area: outer error margin";
+            audioManager.Stop("ResectionArea");
+            audioManager.Play("OuterErrorMargin");
+            alertText.color = Color.red;
+            alertText.text = "Do not cut here! You are too far away from the tumor";
+            currentArea.color = Color.red;
+            currentArea.text = "Current area: outer error margin";
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            FindObjectOfType<AudioManager>().Stop("InnerErrorMargin");
-            FindObjectOfType<AudioManager>().Play("ResectionArea");
-            AlertText.color = Color.green;
-            AlertText.text = "You can cut here!";
-            CurrentArea.color = Color.green;
-            CurrentArea.text = "Current area: resection area";
+            audioManager.Stop("InnerErrorMargin");
+            audioManager.Play("ResectionArea");
+            alertText.color = Color.green;
+            alertText.text = "You can cut here!";
+            currentArea.color = Color.green;
+            currentArea.text = "Current area: resection area";
         }
-        else if (col.gameObject.CompareTag("TumorArea"))
+        else if (col.gameObject.CompareTag("Tumor"))
         {
-            
-            FindObjectOfType<AudioManager>().LoopStop("TumorArea");
-            FindObjectOfType<AudioManager>().Stop("TumorArea");
-            FindObjectOfType<AudioManager>().Play("InnerErrorMargin");
-            AlertText.color = Color.red;
-            AlertText.text = "Do not cut here! You are too close to the tumor";
-            CurrentArea.color = Color.red;
-            CurrentArea.text = "Current area: inner error margin";
+
+            audioManager.LoopStop("Tumor");
+            audioManager.Stop("Tumor");
+            audioManager.Play("InnerErrorMargin");
+            alertText.color = Color.red;
+            alertText.text = "Do not cut here! You are too close to the tumor";
+            currentArea.color = Color.red;
+            currentArea.text = "Current area: inner error margin";
         }
 
     }

@@ -2,8 +2,6 @@
 
 public class ToolController : MonoBehaviour
 {
-    //public Text tumorDistance;
-    //public Text currentArea;
 
     [SerializeField]
     private float speed = 1;
@@ -11,8 +9,6 @@ public class ToolController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //tumorDistance.text = "Distance to tumor: ...";
-        //currentArea.text = "Current area: ...";
     }
 
     // Update is called once per frame
@@ -23,10 +19,6 @@ public class ToolController : MonoBehaviour
 
         Vector3 movement = new Vector3(horizontal, vertical);
         transform.position += movement * Time.deltaTime * speed; // make movement framerate independent
-
-        // update values in user interface
-        //tumorDistance.text = "updated tumor distance..";
-        //currentArea.text = "updated area";
 
     }
 }
