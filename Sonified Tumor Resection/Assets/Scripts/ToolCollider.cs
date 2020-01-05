@@ -1,34 +1,80 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 //This script handles everything with playing sounds and displaying texts regarding the distance between tool tip and tumor
 public class ToolCollider : MonoBehaviour
 {
     public GameObject tumor;
     public GameObject toolTip;
-    private float _distance;
-    private float tumorRadius;
     public Text tumorDistance;
     public Text alertText;
     public Text currentArea;
     public AudioManager audioManager;
 
+    //For Raycast
+    public float maxRayDistance = 50;
+
     void Start()
     {
         tumor = GameObject.Find("Tumor");
         toolTip = GameObject.Find("ToolTip");
-        tumorRadius = tumor.GetComponent<SphereCollider>().radius;
         tumorDistance.text = "";
         alertText.text = "";
         currentArea.text = "";
         audioManager = FindObjectOfType<AudioManager>();
+
     }
 
     void Update()
     {
-        _distance = Vector3.Distance(tumor.transform.position, gameObject.transform.position);
-        _distance -= tumorRadius;
-        tumorDistance.text = "Distance to tumor: " + _distance;
+
+    }
+
+    //For Raycast
+    void FixedUpdate()
+    {
+        Ray rayDown = new Ray(transform.position, Vector3.down);
+        Ray rayUp = new Ray(transform.position, Vector3.up);
+        Ray rayLeft = new Ray(transform.position, Vector3.left);
+        Ray rayRight = new Ray(transform.position, Vector3.right);
+        Ray rayForw = new Ray(transform.position, Vector3.forward);
+        Ray rayBack = new Ray(transform.position, Vector3.back);
+        List<Ray> rays = new List<Ray>();
+        rays.Add(rayDown); rays.Add(rayUp); rays.Add(rayLeft); rays.Add(rayRight); rays.Add(rayForw); rays.Add(rayBack);
+
+        RaycastHit hit;
+        List<float> distances = new List<float>();
+
+        foreach (Ray ray in rays)
+        {
+            Debug.Log("New ray");
+            if (Physics.Raycast(ray, out hit, maxRayDistance))
+            {
+                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                distances.Add(hit.distance);
+            }
+        }
+
+        if (distances.Count > 0)
+        {
+            float minDistance = distances[0];
+
+            foreach (float distance in distances)
+            {
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                }
+            }
+            Debug.Log("Min Distance: " + minDistance);
+            tumorDistance.text = "Distance to tumor: " + minDistance;
+        }
+        else
+        {
+            Debug.Log("No valid min distance. You are in the tumor or your scalpel is not well positioned towards the tumor.");
+            tumorDistance.text = "No valid distance. Position your scalpel towards the tumor!";
+        }
     }
 
     void OnTriggerEnter(Collider col)
