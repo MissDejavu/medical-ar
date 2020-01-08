@@ -26,13 +26,8 @@ public class ToolCollider : MonoBehaviour
 
     }
 
+    //For raycasting
     void Update()
-    {
-
-    }
-
-    //For Raycast
-    void FixedUpdate()
     {
         Ray rayDown = new Ray(transform.position, Vector3.down);
         Ray rayUp = new Ray(transform.position, Vector3.up);
