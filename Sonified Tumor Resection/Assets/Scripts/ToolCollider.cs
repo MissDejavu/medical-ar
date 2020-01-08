@@ -8,6 +8,7 @@ public class ToolCollider : MonoBehaviour
     public GameObject tumor;
     public GameObject toolTip;
     public Text tumorDistance;
+    public Text vesselDistance;
     public Text alertText;
     public Text currentArea;
     public AudioManager audioManager;
@@ -39,7 +40,8 @@ public class ToolCollider : MonoBehaviour
         rays.Add(rayDown); rays.Add(rayUp); rays.Add(rayLeft); rays.Add(rayRight); rays.Add(rayForw); rays.Add(rayBack);
 
         RaycastHit hit;
-        List<float> distances = new List<float>();
+        List<float> distancesTumor = new List<float>();
+        List<float> distancesVessel = new List<float>();
 
         foreach (Ray ray in rays)
         {
@@ -47,15 +49,31 @@ public class ToolCollider : MonoBehaviour
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
                 Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
-                distances.Add(hit.distance);
+                if (hit.collider.name == "Tumor")
+                {
+                    distancesTumor.Add(hit.distance);
+                }
             }
         }
 
-        if (distances.Count > 0)
+        foreach (Ray ray in rays)
         {
-            float minDistance = distances[0];
+            Debug.Log("New ray");
+            if (Physics.Raycast(ray, out hit, maxRayDistance))
+            {
+                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                if (hit.collider.name == "BloodVessel")
+                {
+                    distancesVessel.Add(hit.distance);
+                }
+            }
+        }
 
-            foreach (float distance in distances)
+        if (distancesTumor.Count > 0)
+        {
+            float minDistance = distancesTumor[0];
+
+            foreach (float distance in distancesTumor)
             {
                 if (distance < minDistance)
                 {
@@ -67,8 +85,29 @@ public class ToolCollider : MonoBehaviour
         }
         else
         {
-            Debug.Log("No valid min distance. You are in the tumor or your scalpel is not well positioned towards the tumor.");
-            tumorDistance.text = "No valid distance. Position your scalpel towards the tumor!";
+            Debug.Log("No valid min distance. Your scalpel is not well positioned towards the tumor or the vessel.");
+            tumorDistance.text = "Distance to tumor cannot be measured. Change position of your scapel.";
+        }
+
+
+        if (distancesVessel.Count > 0)
+        {
+            float minDistance = distancesVessel[0];
+
+            foreach (float distance in distancesVessel)
+            {
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                }
+            }
+            Debug.Log("Min Distance to vessel: " + minDistance);
+            vesselDistance.text = "Distance to vessel: " + minDistance;
+        }
+        else
+        {
+            Debug.Log("No valid min distance. Your scalpel is not well positioned towards the tumor or the vessel.");
+            vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";
         }
     }
 
@@ -80,7 +119,7 @@ public class ToolCollider : MonoBehaviour
         {
             audioManager.Play("OuterErrorMargin");
             currentArea.color = Color.red;
-            currentArea.text = "Current area: outer error margin";
+            currentArea.text = "Current area: outer error margin of tumor";
             alertText.color = Color.red;
             alertText.text = "Do not cut here! You are too far away from the tumor";
         }
@@ -96,7 +135,7 @@ public class ToolCollider : MonoBehaviour
         {
             audioManager.Play("InnerErrorMargin");
             currentArea.color = Color.red;
-            currentArea.text = "Current area: inner error margin";
+            currentArea.text = "Current area: inner error margin of tumor";
             alertText.color = Color.red;
             alertText.text = "Do not cut here! You are too close to the tumor";
         }
@@ -123,7 +162,7 @@ public class ToolCollider : MonoBehaviour
             alertText.color = Color.red;
             alertText.text = "Do not cut here! You are too far away from the tumor";
             currentArea.color = Color.red;
-            currentArea.text = "No area";
+            currentArea.text = "No area for cutting";
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
@@ -132,7 +171,7 @@ public class ToolCollider : MonoBehaviour
             alertText.color = Color.red;
             alertText.text = "Do not cut here! You are too far away from the tumor";
             currentArea.color = Color.red;
-            currentArea.text = "Current area: outer error margin";
+            currentArea.text = "Current area: outer error margin of tumor";
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
@@ -152,7 +191,7 @@ public class ToolCollider : MonoBehaviour
             alertText.color = Color.red;
             alertText.text = "Do not cut here! You are too close to the tumor";
             currentArea.color = Color.red;
-            currentArea.text = "Current area: inner error margin";
+            currentArea.text = "Current area: inner error margin of tumor";
         }
 
     }
