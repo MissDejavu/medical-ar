@@ -14,7 +14,7 @@ public class ToolCollider : MonoBehaviour
     public AudioManager audioManager;
 
     //For Raycast
-    public float maxRayDistance = 50;
+    public float maxRayDistance = Mathf.Infinity;
 
     void Start()
     {
@@ -30,14 +30,21 @@ public class ToolCollider : MonoBehaviour
     //For raycasting
     void Update()
     {
-        Ray rayDown = new Ray(transform.position, Vector3.down);
-        Ray rayUp = new Ray(transform.position, Vector3.up);
-        Ray rayLeft = new Ray(transform.position, Vector3.left);
-        Ray rayRight = new Ray(transform.position, Vector3.right);
-        Ray rayForw = new Ray(transform.position, Vector3.forward);
-        Ray rayBack = new Ray(transform.position, Vector3.back);
+        Ray rayDown = new Ray(transform.position, transform.TransformDirection(Vector3.down));
+        Ray rayUp = new Ray(transform.position, transform.TransformDirection(Vector3.up));
+        Ray rayLeft = new Ray(transform.position, transform.TransformDirection(Vector3.left));
+        Ray rayRight = new Ray(transform.position, transform.TransformDirection(Vector3.right));
+        Ray rayForw = new Ray(transform.position, transform.TransformDirection(Vector3.forward));
+        Ray rayBack = new Ray(transform.position, transform.TransformDirection(Vector3.back));
+        Ray rayDown45 = new Ray(transform.position, Quaternion.Euler(0, -45, 0)* Vector3.down);
+        Ray rayUp45 = new Ray(transform.position, Quaternion.Euler(0, 45, 0) * Vector3.up);
+        Ray rayLeft45 = new Ray(transform.position, Quaternion.Euler(45, 0, 0) * Vector3.left);
+        Ray rayRight45 = new Ray(transform.position, Quaternion.Euler(-45, 0, 0) * Vector3.right);
+        Ray rayForw45 = new Ray(transform.position, Quaternion.Euler(0, 0, 45) * Vector3.forward);
+        Ray rayBack45 = new Ray(transform.position, Quaternion.Euler(0, 0, -45) * Vector3.back);
         List<Ray> rays = new List<Ray>();
         rays.Add(rayDown); rays.Add(rayUp); rays.Add(rayLeft); rays.Add(rayRight); rays.Add(rayForw); rays.Add(rayBack);
+        rays.Add(rayDown45); rays.Add(rayUp45); rays.Add(rayLeft45); rays.Add(rayRight45); rays.Add(rayForw45); rays.Add(rayBack45);
 
         RaycastHit hit;
         List<float> distancesTumor = new List<float>();
@@ -45,6 +52,7 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
+            Debug.DrawRay(transform.position, ray.direction, Color.green, 25, false);
             Debug.Log("New ray");
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
@@ -56,20 +64,7 @@ public class ToolCollider : MonoBehaviour
             }
         }
 
-        foreach (Ray ray in rays)
-        {
-            Debug.Log("New ray");
-            if (Physics.Raycast(ray, out hit, maxRayDistance))
-            {
-                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
-                if (hit.collider.name == "BloodVessel")
-                {
-                    distancesVessel.Add(hit.distance);
-                }
-            }
-        }
-
-        if (distancesTumor.Count > 0)
+         if (distancesTumor.Count > 0)
         {
             float minDistance = distancesTumor[0];
 
@@ -82,6 +77,7 @@ public class ToolCollider : MonoBehaviour
             }
             Debug.Log("Min Distance: " + minDistance);
             tumorDistance.text = "Distance to tumor: " + minDistance;
+            distancesTumor.Clear();
         }
         else
         {
@@ -89,6 +85,19 @@ public class ToolCollider : MonoBehaviour
             tumorDistance.text = "Distance to tumor cannot be measured. Change position of your scapel.";
         }
 
+        /*foreach (Ray ray in rays)
+        {
+            Debug.DrawRay(transform.position, ray.direction, Color.blue, 25, false);
+            Debug.Log("New ray");
+            if (Physics.Raycast(ray, out hit, maxRayDistance))
+            {
+                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                if (hit.collider.name == "BloodVessel")
+                {
+                    distancesVessel.Add(hit.distance);
+                }
+            }
+        }
 
         if (distancesVessel.Count > 0)
         {
@@ -103,12 +112,13 @@ public class ToolCollider : MonoBehaviour
             }
             Debug.Log("Min Distance to vessel: " + minDistance);
             vesselDistance.text = "Distance to vessel: " + minDistance;
+            distancesVessel.Clear();
         }
         else
         {
             Debug.Log("No valid min distance. Your scalpel is not well positioned towards the tumor or the vessel.");
             vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";
-        }
+        }*/
     }
 
     void OnTriggerEnter(Collider col)
