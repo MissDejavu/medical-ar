@@ -44,7 +44,7 @@ public class ToolCollider : MonoBehaviour
         Ray rayBack45 = new Ray(transform.position, Quaternion.Euler(0, 0, -45) * Vector3.back);
         List<Ray> rays = new List<Ray>();
         rays.Add(rayDown); rays.Add(rayUp); rays.Add(rayLeft); rays.Add(rayRight); rays.Add(rayForw); rays.Add(rayBack);
-        rays.Add(rayDown45); rays.Add(rayUp45); rays.Add(rayLeft45); rays.Add(rayRight45); rays.Add(rayForw45); rays.Add(rayBack45);
+        
 
         RaycastHit hit;
         List<float> distancesTumor = new List<float>();
