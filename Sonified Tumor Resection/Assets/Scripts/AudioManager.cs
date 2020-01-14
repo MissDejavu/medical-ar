@@ -7,6 +7,8 @@ public class AudioManager : MonoBehaviour
 
     public static AudioManager instance;
 
+    private Sound primarySound; // sound that is currently playing
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -24,9 +26,18 @@ public class AudioManager : MonoBehaviour
         {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
-
+            s.source.loop = s.loop;
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
+        }
+
+        if (sounds.Length > 0)
+        {
+            primarySound = sounds[0];
+        }
+        else
+        {
+            Debug.LogWarning("No sounds defined!");
         }
     }
 
@@ -35,7 +46,63 @@ public class AudioManager : MonoBehaviour
         // todo check where the tool is and start the correct sound (would probably always be outside the cutting area in the "too far" section)
     }
 
-  public void Play (string name)
+    public void PlayPrimary(string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+
+        primarySound.source.Stop();
+        primarySound = s;
+        Debug.Log("Playing Sound: " + primarySound.name);
+        primarySound.source.Play();
+    }
+
+    public void StopPrimary()
+    {
+        if (primarySound == null)
+        {
+            Debug.LogWarning("There is currently no primary sound!");
+            return;
+        }
+        primarySound.source.Stop();
+    }
+
+    public void SetVolumePrimary(float value)
+    {
+        primarySound.source.volume = value;
+    }
+
+    public void SetPitchPrimary(float value)
+    {
+
+        primarySound.source.pitch = value;
+    }
+
+    public void StopAll()
+    {
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            sounds[i].source.Stop();
+        }
+    }
+
+    public void SetLoop(string name, bool value)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+        s.source.loop = value;
+    }
+
+    // ----------use these only for additional sounds, not for primary sonification------------
+    public void Play (string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
@@ -55,35 +122,5 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.Stop();
-    }
-
-    public void StopAll()
-    {
-        for (int i = 0; i < sounds.Length; i++)
-        {
-            sounds[i].source.Stop();
-        }
-    }
-
-    public void LoopStart(string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        s.source.loop = true;
-    }
-
-    public void LoopStop(string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        s.source.loop = false;
     }
 }

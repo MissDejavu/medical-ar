@@ -9,9 +9,9 @@ public class Sound
 
     public AudioClip clip;
 
-    [Range(0f, 1f)]
+    [Range(Constants.MinVolume, Constants.MaxVolume)]
     public float volume;
-    [Range(.1f, 3f)]
+    [Range(Constants.MinPitch, Constants.MaxPitch)]
     public float pitch;
 
     [HideInInspector]

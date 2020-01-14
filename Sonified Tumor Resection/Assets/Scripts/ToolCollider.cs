@@ -22,6 +22,7 @@ public class ToolCollider : MonoBehaviour
 
     void Awake()
     {
+        //2D
         vectorList.Add(Vector3.down); vectorList.Add(Vector3.up); vectorList.Add(Vector3.left); vectorList.Add(Vector3.right); vectorList.Add(Vector3.forward); vectorList.Add(Vector3.back);
         vectorList.Add(new Vector3(1, 1, 0)); vectorList.Add(new Vector3(-1, 1, 0)); vectorList.Add(new Vector3(-1, -1, 0)); vectorList.Add(new Vector3(1, -1, 0));
         vectorList.Add(new Vector3(1, 0, 1)); vectorList.Add(new Vector3(-1, 0, 1)); vectorList.Add(new Vector3(-1, 0, -1)); vectorList.Add(new Vector3(1, 0, -1));
@@ -31,7 +32,15 @@ public class ToolCollider : MonoBehaviour
         vectorList.Add(new Vector3(0.5f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.5f)); vectorList.Add(new Vector3(-0.5f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.5f));
         vectorList.Add(new Vector3(-0.5f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.5f)); vectorList.Add(new Vector3(0.5f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.5f));
         vectorList.Add(new Vector3(0, 0.5f, 1)); vectorList.Add(new Vector3(0, 1, 0.5f)); vectorList.Add(new Vector3(0, -0.5f, 1)); vectorList.Add(new Vector3(0, -1, 0.5f));
+        //3D
         vectorList.Add(new Vector3(0, -0.5f, -1)); vectorList.Add(new Vector3(0, -1, -0.5f)); vectorList.Add(new Vector3(0, 0.5f, -1)); vectorList.Add(new Vector3(0, 1, -0.5f));
+        vectorList.Add(new Vector3(1, 1, 1)); vectorList.Add(new Vector3(-1, 1, 1)); vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1));
+        vectorList.Add(new Vector3(-1, 1, -1)); vectorList.Add(new Vector3(1, 1, -1));vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(1, 1, -1));
+        vectorList.Add(new Vector3(1, 0.5f, 1)); vectorList.Add(new Vector3(0.5f, 1, 1)); vectorList.Add(new Vector3(-0.5f, 1, 1)); vectorList.Add(new Vector3(-1, 0.5f, 1));
+        vectorList.Add(new Vector3(-0.5f, -1, 1)); vectorList.Add(new Vector3(-1, -0.5f, 1)); vectorList.Add(new Vector3(0.5f, -1, 1)); vectorList.Add(new Vector3(1, -0.5f, 1));
+        vectorList.Add(new Vector3(1, 1, 0.5f));  vectorList.Add(new Vector3(-1f, 1, 0.5f)); vectorList.Add(new Vector3(-0.5f, 1, -1)); vectorList.Add(new Vector3(-1, 1, -0.5f));
+        vectorList.Add(new Vector3(1, -1, 0.5f)); vectorList.Add(new Vector3(1, -0.5f, -1)); vectorList.Add(new Vector3(1, -1, -0.5f)); vectorList.Add(new Vector3(1, 0.5f, -1)); 
+        vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-1, 0.5f, -1)); vectorList.Add(new Vector3(-0.5f, -1, -1));  vectorList.Add(new Vector3(0.5f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.5f));
     }
 
     void Start()
@@ -42,6 +51,9 @@ public class ToolCollider : MonoBehaviour
         alertText.text = "";
         currentArea.text = "";
         audioManager = FindObjectOfType<AudioManager>();
+  
+        // todo check where the tool is and start the correct sound (would probably always be outside the cutting area in the "too far" section)
+        audioManager.PlayPrimary("NoArea");
     }
 
     void Update()
@@ -52,24 +64,44 @@ public class ToolCollider : MonoBehaviour
         if (distancesTumor.Count > 0)
         {
             float minDistanceTumor = FindMinDistance(distancesTumor);
-            Debug.Log("Min distance to tumor: " + minDistanceTumor);
+            if (Constants.DebugLogAll)
+            {
+                //Debug.Log("Min distance to tumor: " + minDistanceTumor);
+            }
             tumorDistance.text = "Distance to tumor: " + minDistanceTumor;
+
+            //update sound
+            if (minDistanceTumor <= Constants.TotalMaxDistance && minDistanceTumor >= 0)
+            {
+                float scaledValue = Scaled(minDistanceTumor, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
+                audioManager.SetPitchPrimary(Constants.MaxPitch - scaledValue);
+                Debug.Log("Pitch:" + (Constants.MaxPitch - scaledValue));
+            }
         }
         else
         {
-            Debug.Log("No valid min distance. Your scalpel is not well positioned towards the tumor.");
+            //Debug.Log("No valid min distance. Your scalpel is not well positioned towards the tumor.");
             tumorDistance.text = "Distance to tumor cannot be measured. Change position of your scapel.";
         }
 
         if (distancesVessel.Count > 0)
         {
             float minDistanceVessel = FindMinDistance(distancesVessel);
-            Debug.Log("Min distance to vessel: " + minDistanceVessel);
+            if (Constants.DebugLogAll)
+            {
+                //Debug.Log("Min distance to vessel: " + minDistanceVessel);
+            }
             vesselDistance.text = "Distance to vessel: " + minDistanceVessel;
+            //update sound
+            if (minDistanceVessel <= Constants.MaxObstacleDistance)
+            {
+                float scaledValue = Scaled(minDistanceVessel, 0, Constants.MaxObstacleDistance, Constants.MinVolume, Constants.MaxVolume);
+                audioManager.SetVolumePrimary(Constants.MaxVolume - scaledValue);
+            }
         }
         else
         {
-            Debug.Log("No valid min distance. Your scalpel is not well positioned towards or the vessel.");
+            //Debug.Log("No valid min distance. Your scalpel is not well positioned towards or the vessel.");
             vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";
         }
         distancesTumor.Clear();
@@ -78,40 +110,27 @@ public class ToolCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        audioManager.StopAll();
-        // start playing sound depending on the area that was entered
+        // play sound and update text depending on the area
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            audioManager.Play("OuterErrorMargin");
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: outer error margin of tumor";
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too far away from the tumor";
+            audioManager.PlayPrimary(Constants.OuterErrorMarginSound);
+            UpdateCanvas(color: Color.red, area: "No area for cutting", alert: "Do not cut here! You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            audioManager.Play("ResectionArea");
-            currentArea.color = Color.green;
-            currentArea.text = "Current area: resection area";
-            alertText.color = Color.green;
-            alertText.text = "You can cut here!";
+            audioManager.PlayPrimary(Constants.ResectionAreaSound);
+            UpdateCanvas(color: Color.green, area: "Current area: resection area", alert: "You can cut here!");
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            audioManager.Play("InnerErrorMargin");
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: inner error margin of tumor";
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too close to the tumor";
+            audioManager.PlayPrimary(Constants.InnerErrorMarginSound);
+            UpdateCanvas(color: Color.red, area: "Current area: inner error margin of tumor", alert: "Do not cut here! You are too close to the tumor");
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
-            audioManager.LoopStart("Tumor");
+            audioManager.PlayPrimary(Constants.TumorSound);
             FindObjectOfType<AudioManager>().Play("Tumor");
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: tumor area";
-            alertText.color = Color.red;
-            alertText.text = "Attention! You touched the tumor!";
+            UpdateCanvas(color: Color.red, area: "Current area: tumor area", alert: "Attention! You touched the tumor!");
         }
     }
 
@@ -120,41 +139,23 @@ public class ToolCollider : MonoBehaviour
         // stop sound depending on the area that was exited
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            audioManager.Stop("OuterErrorMargin");
-            audioManager.Play("NoArea");
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too far away from the tumor";
-            currentArea.color = Color.red;
-            currentArea.text = "No area for cutting";
+            audioManager.PlayPrimary(Constants.OuterAreaSound);
+            UpdateCanvas(color: Color.red, area: "No area for cutting", alert: "Do not cut here! You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            audioManager.Stop("ResectionArea");
-            audioManager.Play("OuterErrorMargin");
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too far away from the tumor";
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: outer error margin of tumor";
+            audioManager.PlayPrimary(Constants.OuterErrorMarginSound);
+            UpdateCanvas(color: Color.red, area: "Current area: outer error margin of tumor", alert: "Do not cut here! You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            audioManager.Stop("InnerErrorMargin");
-            audioManager.Play("ResectionArea");
-            alertText.color = Color.green;
-            alertText.text = "You can cut here!";
-            currentArea.color = Color.green;
-            currentArea.text = "Current area: resection area";
+            audioManager.PlayPrimary(Constants.ResectionAreaSound);
+            UpdateCanvas(color: Color.green, area: "Current area: resection area", alert: "You can cut here!");
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
-
-            audioManager.LoopStop("Tumor");
-            audioManager.Stop("Tumor");
-            audioManager.Play("InnerErrorMargin");
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too close to the tumor";
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: inner error margin of tumor";
+            audioManager.PlayPrimary(Constants.InnerErrorMarginSound);
+            UpdateCanvas(color: Color.red, area: "Current area: inner error margin of tumor", alert: "Do not cut here! You are too close to the tumor");
         }
     }
 
@@ -172,10 +173,9 @@ public class ToolCollider : MonoBehaviour
         foreach (Ray ray in rays)
         {
             Debug.DrawRay(transform.position, ray.direction, Color.green, 1000, false);
-            Debug.Log("New ray");
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
-                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
                 if (hit.collider.name == "Tumor")
                 {
                     distances.Add(hit.distance);
@@ -198,18 +198,13 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
-            Debug.DrawRay(transform.position, ray.direction, Color.green, 1000, false);
-            Debug.Log("New ray");
+            Debug.DrawRay(transform.position, ray.direction, Color.blue, 1000, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
-                Debug.Log("New ray");
-                if (Physics.Raycast(ray, out hit, maxRayDistance))
+                //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                if (hit.collider.name == "BloodVessel")
                 {
-                    Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
-                    if (hit.collider.name == "BloodVessel")
-                    {
-                        distances.Add(hit.distance);
-                    }
+                    distances.Add(hit.distance);
                 }
             }
         }
@@ -230,5 +225,24 @@ public class ToolCollider : MonoBehaviour
             }
         }
         return (minDistance);
+    }
+
+    public void UpdateCanvas(Color color, string area, string alert)
+    {
+        currentArea.color = color;
+        currentArea.text = area;
+        alertText.color = color;
+        alertText.text = alert;
+    }
+
+    // scale a value (value) from the range [originMin, originMax] to a new range [targetMin, targetMax]
+    public float Scaled(float value, float originMin, float originMax, float targetMin, float targetMax)
+    {
+        if (value > originMax || value < originMin)
+        {
+            Debug.LogWarning("Can't scale. Value not in range.");
+            return 0;
+        }
+        return ((value - originMin) / (originMax - originMin)) * (targetMax - targetMin) + targetMin;
     }
 }
