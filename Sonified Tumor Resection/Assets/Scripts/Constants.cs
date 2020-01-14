@@ -13,9 +13,7 @@ public static class Constants
 
     // -----------sound names-----------------------
     public const string OuterAreaSound = "NoArea";
-    public const string OuterErrorMarginSound = "OuterErrorMargin";
-    public const string InnerErrorMarginSound = "InnerErrorMargin";
-    public const string ResectionAreaSound = "ResectionArea";
+    public const string MarginsSound= "Margins";
     public const string TumorSound = "Tumor";
     public const string BackgroundSound = "Background";
     // -----------sound param+eters-----------------

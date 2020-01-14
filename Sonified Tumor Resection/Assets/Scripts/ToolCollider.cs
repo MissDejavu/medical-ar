@@ -113,23 +113,20 @@ public class ToolCollider : MonoBehaviour
         // play sound and update text depending on the area
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            audioManager.PlayPrimary(Constants.OuterErrorMarginSound);
+            audioManager.PlayPrimary(Constants.MarginsSound);
             UpdateCanvas(color: Color.red, area: "No area for cutting", alert: "Do not cut here! You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            audioManager.PlayPrimary(Constants.ResectionAreaSound);
             UpdateCanvas(color: Color.green, area: "Current area: resection area", alert: "You can cut here!");
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            audioManager.PlayPrimary(Constants.InnerErrorMarginSound);
             UpdateCanvas(color: Color.red, area: "Current area: inner error margin of tumor", alert: "Do not cut here! You are too close to the tumor");
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
             audioManager.PlayPrimary(Constants.TumorSound);
-            FindObjectOfType<AudioManager>().Play("Tumor");
             UpdateCanvas(color: Color.red, area: "Current area: tumor area", alert: "Attention! You touched the tumor!");
         }
     }
@@ -144,17 +141,15 @@ public class ToolCollider : MonoBehaviour
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            audioManager.PlayPrimary(Constants.OuterErrorMarginSound);
             UpdateCanvas(color: Color.red, area: "Current area: outer error margin of tumor", alert: "Do not cut here! You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            audioManager.PlayPrimary(Constants.ResectionAreaSound);
             UpdateCanvas(color: Color.green, area: "Current area: resection area", alert: "You can cut here!");
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
-            audioManager.PlayPrimary(Constants.InnerErrorMarginSound);
+            audioManager.PlayPrimary(Constants.MarginsSound);
             UpdateCanvas(color: Color.red, area: "Current area: inner error margin of tumor", alert: "Do not cut here! You are too close to the tumor");
         }
     }
