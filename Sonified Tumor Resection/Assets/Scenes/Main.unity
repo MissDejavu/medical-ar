@@ -592,6 +592,12 @@ MonoBehaviour:
     pitch: 1
     source: {fileID: 0}
     loop: 1
+  - name: Margins
+    clip: {fileID: 8300000, guid: dcb57675836846d43b88ecfe13a0a1ac, type: 3}
+    volume: 0.5
+    pitch: 1
+    source: {fileID: 0}
+    loop: 1
 --- !u!1 &464693173
 GameObject:
   m_ObjectHideFlags: 0
