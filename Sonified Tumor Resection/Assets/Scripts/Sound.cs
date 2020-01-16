@@ -14,7 +14,7 @@ public class Sound
     [Range(Constants.MinPitch, Constants.MaxPitch)]
     public float pitch;
 
-    [HideInInspector]
+    //[HideInInspector]
     public AudioSource source;
 
     public bool loop;
