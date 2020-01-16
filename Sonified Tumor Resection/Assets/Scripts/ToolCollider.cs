@@ -51,9 +51,6 @@ public class ToolCollider : MonoBehaviour
         alertText.text = "";
         currentArea.text = "";
         audioManager = FindObjectOfType<AudioManager>();
-  
-        // todo check where the tool is and start the correct sound (would probably always be outside the cutting area in the "too far" section)
-        audioManager.PlayPrimary("NoArea");
     }
 
     void Update()
@@ -74,7 +71,7 @@ public class ToolCollider : MonoBehaviour
             if (minDistanceTumor <= Constants.TotalMaxDistance && minDistanceTumor >= 0)
             {
                 float scaledValue = Scaled(minDistanceTumor, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
-                audioManager.SetPitchPrimary(Constants.MaxPitch - scaledValue);
+                audioManager.SetPitch(Constants.MarginsSound, Constants.MaxPitch - scaledValue);
                 Debug.Log("Pitch:" + (Constants.MaxPitch - scaledValue));
             }
         }
@@ -96,7 +93,7 @@ public class ToolCollider : MonoBehaviour
             if (minDistanceVessel <= Constants.MaxObstacleDistance)
             {
                 float scaledValue = Scaled(minDistanceVessel, 0, Constants.MaxObstacleDistance, Constants.MinVolume, Constants.MaxVolume);
-                audioManager.SetVolumePrimary(Constants.MaxVolume - scaledValue);
+                //audioManager.SetVolume(Constants.MarginsSound, Constants.MaxVolume - scaledValue);
             }
         }
         else
@@ -113,7 +110,8 @@ public class ToolCollider : MonoBehaviour
         // play sound and update text depending on the area
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            audioManager.PlayPrimary(Constants.MarginsSound);
+            audioManager.Stop(Constants.OuterAreaSound);
+            audioManager.Play(Constants.MarginsSound);
             UpdateCanvas(color: Color.red, area: "No area for cutting", alert: "Do not cut here! You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
@@ -126,8 +124,8 @@ public class ToolCollider : MonoBehaviour
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
-            audioManager.PlayPrimary(Constants.TumorSound);
-            FindObjectOfType<AudioManager>().Play("Tumor");
+            audioManager.Stop(Constants.MarginsSound);
+            audioManager.Play(Constants.TumorSound);
             UpdateCanvas(color: Color.red, area: "Current area: tumor area", alert: "Attention! You touched the tumor!");
         }
     }
@@ -137,7 +135,8 @@ public class ToolCollider : MonoBehaviour
         // stop sound depending on the area that was exited
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            audioManager.PlayPrimary(Constants.OuterAreaSound);
+            audioManager.Stop(Constants.MarginsSound);
+            audioManager.Play(Constants.OuterAreaSound);
             UpdateCanvas(color: Color.red, area: "No area for cutting", alert: "Do not cut here! You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
@@ -150,7 +149,8 @@ public class ToolCollider : MonoBehaviour
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
-            audioManager.PlayPrimary(Constants.MarginsSound);
+            audioManager.Stop(Constants.TumorSound);
+            audioManager.Play(Constants.MarginsSound);
             UpdateCanvas(color: Color.red, area: "Current area: inner error margin of tumor", alert: "Do not cut here! You are too close to the tumor");
         }
     }

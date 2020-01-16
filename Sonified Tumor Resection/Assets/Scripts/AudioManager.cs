@@ -7,7 +7,7 @@ public class AudioManager : MonoBehaviour
 
     public static AudioManager instance;
 
-    private Sound primarySound; // sound that is currently playing
+    private Sound sound; // background sound that is playing
 
     // Start is called before the first frame update
     void Awake()
@@ -33,7 +33,7 @@ public class AudioManager : MonoBehaviour
 
         if (sounds.Length > 0)
         {
-            primarySound = sounds[0];
+            //primarySound = sounds[0];
         }
         else
         {
@@ -43,10 +43,11 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        // todo check where the tool is and start the correct sound (would probably always be outside the cutting area in the "too far" section)
+        // todo check where the tool is and start the correct sound (would probably always be oOutside the cutting area in the "too far" section)
+        Play("Background");
     }
 
-    public void PlayPrimary(string name)
+    public void SetVolume(string name, float value)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
@@ -54,32 +55,20 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
-
-        primarySound.source.Stop();
-        primarySound = s;
-        Debug.Log("Playing Sound: " + primarySound.name);
-        primarySound.source.Play();
+        s.source.volume = value;
     }
 
-    public void StopPrimary()
+    public void SetPitch(string name, float value)
     {
-        if (primarySound == null)
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
         {
-            Debug.LogWarning("There is currently no primary sound!");
+            Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
-        primarySound.source.Stop();
-    }
-
-    public void SetVolumePrimary(float value)
-    {
-        primarySound.source.volume = value;
-    }
-
-    public void SetPitchPrimary(float value)
-    {
-
-        primarySound.source.pitch = value;
+        float velocity = 1.5f;
+        float smoothTime = 0.0f; //the smaller the faster
+        s.source.pitch = Mathf.SmoothDamp(1, value, ref velocity, smoothTime);
     }
 
     public void StopAll()
@@ -101,7 +90,6 @@ public class AudioManager : MonoBehaviour
         s.source.loop = value;
     }
 
-    // ----------use these only for additional sounds, not for primary sonification------------
     public void Play (string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);

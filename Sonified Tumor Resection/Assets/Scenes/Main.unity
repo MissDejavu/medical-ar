@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 500, y: -250}
+  m_AnchoredPosition: {x: 600, y: -400}
   m_SizeDelta: {x: 400, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &146905979
@@ -330,7 +330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 500, y: -300}
+  m_AnchoredPosition: {x: 600, y: -450}
   m_SizeDelta: {x: 400, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &215490927
@@ -562,24 +562,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - name: ResectionArea
-    clip: {fileID: 8300000, guid: dcb57675836846d43b88ecfe13a0a1ac, type: 3}
-    volume: 0.5
-    pitch: 1
-    source: {fileID: 0}
-    loop: 1
-  - name: OuterErrorMargin
-    clip: {fileID: 8300000, guid: dcb57675836846d43b88ecfe13a0a1ac, type: 3}
-    volume: 0.5
-    pitch: 2.36
-    source: {fileID: 0}
-    loop: 1
-  - name: InnerErrorMargin
-    clip: {fileID: 8300000, guid: dcb57675836846d43b88ecfe13a0a1ac, type: 3}
-    volume: 0.5
-    pitch: 0.33
-    source: {fileID: 0}
-    loop: 1
   - name: Tumor
     clip: {fileID: 8300000, guid: 53b1e5f8c75639441a66dad90cb0ef87, type: 3}
     volume: 0.5
@@ -591,9 +573,15 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1
     source: {fileID: 0}
-    loop: 1
+    loop: 0
   - name: Margins
-    clip: {fileID: 8300000, guid: dcb57675836846d43b88ecfe13a0a1ac, type: 3}
+    clip: {fileID: 8300000, guid: 48904cb9f7946974abb57be7a8f93779, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 1
+  - name: Background
+    clip: {fileID: 8300000, guid: b48b6c3aaccde5b4bad1ce7ec72371ee, type: 3}
     volume: 0.5
     pitch: 1
     source: {fileID: 0}
@@ -632,7 +620,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 500, y: -325}
+  m_AnchoredPosition: {x: 600, y: -475}
   m_SizeDelta: {x: 400, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &464693175
@@ -709,7 +697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 500, y: -275}
+  m_AnchoredPosition: {x: 600, y: -425}
   m_SizeDelta: {x: 400, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &634208788
@@ -998,7 +986,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalPosition: {x: 0, y: 0, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
