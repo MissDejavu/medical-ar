@@ -9,13 +9,12 @@ public class ToolCollider : MonoBehaviour
     public GameObject toolTip;
     public Text tumorDistance;
     public Text vesselDistance;
-    public Text alertText;
-    public Text currentArea;
+    public Text currentText;
     public AudioManager audioManager;
 
     List<float> distancesTumor = new List<float>();
     List<float> distancesVessel = new List<float>();
-    List<Vector3> vectorList = new List<Vector3>();
+    readonly List<Vector3> vectorList = new List<Vector3>();
 
     //For raycasting
     public float maxRayDistance = Mathf.Infinity;
@@ -48,8 +47,7 @@ public class ToolCollider : MonoBehaviour
         tumor = GameObject.Find("Tumor");
         toolTip = GameObject.Find("ToolTip");
         tumorDistance.text = "";
-        alertText.text = "";
-        currentArea.text = "";
+        currentText.text = "";
         audioManager = FindObjectOfType<AudioManager>();
     }
 
@@ -72,7 +70,7 @@ public class ToolCollider : MonoBehaviour
             {
                 float scaledValue = Scaled(minDistanceTumor, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
                 audioManager.SetPitch(Constants.MarginsSound, Constants.MaxPitch - scaledValue);
-                Debug.Log("Pitch:" + (Constants.MaxPitch - scaledValue));
+                //Debug.Log("Pitch:" + (Constants.MaxPitch - scaledValue));
             }
         }
         else
@@ -88,12 +86,26 @@ public class ToolCollider : MonoBehaviour
             {
                 //Debug.Log("Min distance to vessel: " + minDistanceVessel);
             }
-            vesselDistance.text = "Distance to vessel: " + minDistanceVessel;
+            
             //update sound
             if (minDistanceVessel <= Constants.MaxObstacleDistance)
             {
-                float scaledValue = Scaled(minDistanceVessel, 0, Constants.MaxObstacleDistance, Constants.MinVolume, Constants.MaxVolume);
+                // Same sound with volume changing
+                //float scaledValue = Scaled(minDistanceVessel, 0, Constants.MaxObstacleDistance, Constants.MinVolume, Constants.MaxVolume);
                 //audioManager.SetVolume(Constants.MarginsSound, Constants.MaxVolume - scaledValue);
+                //Debug.Log("Volume:" + (Constants.MaxVolume - scaledValue));
+
+                // New sound with pitch changing
+                float scaledValue = Scaled(minDistanceVessel, 0, Constants.MaxObstacleDistance, Constants.MinFrequency, Constants.MaxFrequency);
+                audioManager.SetHighPassFrequency(scaledValue+1000);
+                Debug.Log("scaledValue: " + scaledValue);
+                vesselDistance.text = "You are nearing a blood vessel! (Distance:  " + minDistanceVessel + ")";
+            }
+            else
+            {
+                audioManager.SetHighPassFrequency(Constants.MeanFrequency);
+                vesselDistance.text = "";
+                Debug.Log("");
             }
         }
         else
@@ -106,27 +118,27 @@ public class ToolCollider : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider col)
-    {
+    {           
         // play sound and update text depending on the area
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
             audioManager.Stop(Constants.OuterAreaSound);
             audioManager.Play(Constants.MarginsSound);
-            UpdateCanvas(color: Color.red, area: "No area for cutting", alert: "Do not cut here! You are too far away from the tumor");
+            UpdateCanvas(color: Color.cyan, "You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            UpdateCanvas(color: Color.green, area: "Current area: resection area", alert: "You can cut here!");
+            UpdateCanvas(color: Color.green,"Resection area");
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            UpdateCanvas(color: Color.red, area: "Current area: inner error margin of tumor", alert: "Do not cut here! You are too close to the tumor");
+            UpdateCanvas(color: Color.magenta, "You are near the tumor!");
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
             audioManager.Stop(Constants.MarginsSound);
             audioManager.Play(Constants.TumorSound);
-            UpdateCanvas(color: Color.red, area: "Current area: tumor area", alert: "Attention! You touched the tumor!");
+            UpdateCanvas(color: Color.red, "Attention! You touched the tumor!");
         }
     }
 
@@ -137,21 +149,21 @@ public class ToolCollider : MonoBehaviour
         {
             audioManager.Stop(Constants.MarginsSound);
             audioManager.Play(Constants.OuterAreaSound);
-            UpdateCanvas(color: Color.red, area: "No area for cutting", alert: "Do not cut here! You are too far away from the tumor");
+            UpdateCanvas(color: Color.blue, "Outside the surgical field!");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            UpdateCanvas(color: Color.red, area: "Current area: outer error margin of tumor", alert: "Do not cut here! You are too far away from the tumor");
+            UpdateCanvas(color: Color.cyan, "You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            UpdateCanvas(color: Color.green, area: "Current area: resection area", alert: "You can cut here!");
+            UpdateCanvas(color: Color.green, "Resection area");
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
             audioManager.Stop(Constants.TumorSound);
             audioManager.Play(Constants.MarginsSound);
-            UpdateCanvas(color: Color.red, area: "Current area: inner error margin of tumor", alert: "Do not cut here! You are too close to the tumor");
+            UpdateCanvas(color: Color.magenta, "You are near the tumor!");
         }
     }
 
@@ -223,12 +235,10 @@ public class ToolCollider : MonoBehaviour
         return (minDistance);
     }
 
-    public void UpdateCanvas(Color color, string area, string alert)
+    public void UpdateCanvas(Color color, string text)
     {
-        currentArea.color = color;
-        currentArea.text = area;
-        alertText.color = color;
-        alertText.text = alert;
+        currentText.color = color;
+        currentText.text = text;
     }
 
     // scale a value (value) from the range [originMin, originMax] to a new range [targetMin, targetMax]

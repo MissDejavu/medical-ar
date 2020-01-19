@@ -7,7 +7,7 @@ public class AudioManager : MonoBehaviour
 
     public static AudioManager instance;
 
-    private Sound sound; // background sound that is playing
+    private AudioHighPassFilter highPassFilter;
 
     // Start is called before the first frame update
     void Awake()
@@ -21,7 +21,6 @@ public class AudioManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
-
         foreach (Sound s in sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
@@ -39,6 +38,8 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning("No sounds defined!");
         }
+
+        highPassFilter = gameObject.AddComponent<AudioHighPassFilter>();
     }
 
     void Start()
@@ -66,6 +67,7 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
+        //to smooth the change
         float velocity = 1.5f;
         float smoothTime = 0.0f; //the smaller the faster
         s.source.pitch = Mathf.SmoothDamp(1, value, ref velocity, smoothTime);
@@ -110,5 +112,10 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.Stop();
+    }
+
+    public void SetHighPassFrequency (float frequency)
+    {
+        highPassFilter.cutoffFrequency = frequency;
     }
 }

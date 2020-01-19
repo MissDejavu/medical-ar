@@ -17,5 +17,7 @@ public class Sound
     //[HideInInspector]
     public AudioSource source;
 
+    public AudioHighPassFilter highPassFilter;
+
     public bool loop;
 }
