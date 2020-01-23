@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 //This script handles everything with playing sounds and displaying texts regarding the distance between tool tip and tumor
 public class ToolCollider : MonoBehaviour
@@ -22,24 +22,37 @@ public class ToolCollider : MonoBehaviour
     void Awake()
     {
         //2D
-        vectorList.Add(Vector3.down); vectorList.Add(Vector3.up); vectorList.Add(Vector3.left); vectorList.Add(Vector3.right); vectorList.Add(Vector3.forward); vectorList.Add(Vector3.back);
-        vectorList.Add(new Vector3(1, 1, 0)); vectorList.Add(new Vector3(-1, 1, 0)); vectorList.Add(new Vector3(-1, -1, 0)); vectorList.Add(new Vector3(1, -1, 0));
-        vectorList.Add(new Vector3(1, 0, 1)); vectorList.Add(new Vector3(-1, 0, 1)); vectorList.Add(new Vector3(-1, 0, -1)); vectorList.Add(new Vector3(1, 0, -1));
-        vectorList.Add(new Vector3(0, 1, 1)); vectorList.Add(new Vector3(0, -1, 1)); vectorList.Add(new Vector3(0, -1, -1)); vectorList.Add(new Vector3(0, 1, -1));
-        vectorList.Add(new Vector3(1, 0.5f, 0)); vectorList.Add(new Vector3(0.5f, 1, 0)); vectorList.Add(new Vector3(-0.5f, 1, 0)); vectorList.Add(new Vector3(-1, 0.5f, 0));
+        vectorList.Add(Vector3.down); vectorList.Add(Vector3.left); vectorList.Add(Vector3.right); vectorList.Add(Vector3.forward); vectorList.Add(Vector3.back);
+        vectorList.Add(new Vector3(-1, -1, 0)); vectorList.Add(new Vector3(1, -1, 0)); vectorList.Add(new Vector3(1, 0, 1)); vectorList.Add(new Vector3(-1, 0, 1)); 
+        vectorList.Add(new Vector3(-1, 0, -1)); vectorList.Add(new Vector3(1, 0, -1)); vectorList.Add(new Vector3(0, -1, 1)); vectorList.Add(new Vector3(0, -1, -1));
         vectorList.Add(new Vector3(-0.5f, -1, 0)); vectorList.Add(new Vector3(-1, -0.5f, 0)); vectorList.Add(new Vector3(0.5f, -1, 0)); vectorList.Add(new Vector3(1, -0.5f, 0));
         vectorList.Add(new Vector3(0.5f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.5f)); vectorList.Add(new Vector3(-0.5f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.5f));
         vectorList.Add(new Vector3(-0.5f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.5f)); vectorList.Add(new Vector3(0.5f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.5f));
-        vectorList.Add(new Vector3(0, 0.5f, 1)); vectorList.Add(new Vector3(0, 1, 0.5f)); vectorList.Add(new Vector3(0, -0.5f, 1)); vectorList.Add(new Vector3(0, -1, 0.5f));
-        //3D
-        vectorList.Add(new Vector3(0, -0.5f, -1)); vectorList.Add(new Vector3(0, -1, -0.5f)); vectorList.Add(new Vector3(0, 0.5f, -1)); vectorList.Add(new Vector3(0, 1, -0.5f));
-        vectorList.Add(new Vector3(1, 1, 1)); vectorList.Add(new Vector3(-1, 1, 1)); vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1));
-        vectorList.Add(new Vector3(-1, 1, -1)); vectorList.Add(new Vector3(1, 1, -1));vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(1, 1, -1));
-        vectorList.Add(new Vector3(1, 0.5f, 1)); vectorList.Add(new Vector3(0.5f, 1, 1)); vectorList.Add(new Vector3(-0.5f, 1, 1)); vectorList.Add(new Vector3(-1, 0.5f, 1));
-        vectorList.Add(new Vector3(-0.5f, -1, 1)); vectorList.Add(new Vector3(-1, -0.5f, 1)); vectorList.Add(new Vector3(0.5f, -1, 1)); vectorList.Add(new Vector3(1, -0.5f, 1));
-        vectorList.Add(new Vector3(1, 1, 0.5f));  vectorList.Add(new Vector3(-1f, 1, 0.5f)); vectorList.Add(new Vector3(-0.5f, 1, -1)); vectorList.Add(new Vector3(-1, 1, -0.5f));
-        vectorList.Add(new Vector3(1, -1, 0.5f)); vectorList.Add(new Vector3(1, -0.5f, -1)); vectorList.Add(new Vector3(1, -1, -0.5f)); vectorList.Add(new Vector3(1, 0.5f, -1)); 
-        vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-1, 0.5f, -1)); vectorList.Add(new Vector3(-0.5f, -1, -1));  vectorList.Add(new Vector3(0.5f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.5f));
+        vectorList.Add(new Vector3(0, -0.5f, 1)); vectorList.Add(new Vector3(0, -1, 0.5f)); vectorList.Add(new Vector3(0, -0.5f, -1)); vectorList.Add(new Vector3(0, -1, -0.5f)); 
+        vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1)); vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(-0.5f, -1, 1)); 
+        vectorList.Add(new Vector3(-1, -0.5f, 1)); vectorList.Add(new Vector3(0.5f, -1, 1)); vectorList.Add(new Vector3(1, -0.5f, 1)); vectorList.Add(new Vector3(1, -1, 0.5f)); 
+        vectorList.Add(new Vector3(1, -0.5f, -1)); vectorList.Add(new Vector3(1, -1, -0.5f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.5f, -1, -1));  
+        vectorList.Add(new Vector3(0.5f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.5f));
+
+        vectorList.Add(new Vector3(-0.25f, -1, 0)); vectorList.Add(new Vector3(-1, -0.25f, 0)); vectorList.Add(new Vector3(0.25f, -1, 0)); vectorList.Add(new Vector3(1, -0.25f, 0));
+        vectorList.Add(new Vector3(0.25f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.25f)); vectorList.Add(new Vector3(-0.25f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.25f));
+        vectorList.Add(new Vector3(-0.25f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.25f)); vectorList.Add(new Vector3(0.25f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.25f));
+        vectorList.Add(new Vector3(0, -0.25f, 1)); vectorList.Add(new Vector3(0, -1, 0.25f)); vectorList.Add(new Vector3(0, -0.25f, -1)); vectorList.Add(new Vector3(0, -1, -0.25f));
+        vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1)); vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(-0.25f, -1, 1));
+        vectorList.Add(new Vector3(-1, -0.25f, 1)); vectorList.Add(new Vector3(0.25f, -1, 1)); vectorList.Add(new Vector3(1, -0.25f, 1)); vectorList.Add(new Vector3(1, -1, 0.25f));
+        vectorList.Add(new Vector3(1, -0.25f, -1)); vectorList.Add(new Vector3(1, -1, -0.25f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.25f, -1, -1));
+        vectorList.Add(new Vector3(0.25f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.25f));
+
+        vectorList.Add(new Vector3(-0.75f, -1, 0)); vectorList.Add(new Vector3(-1, -0.75f, 0)); vectorList.Add(new Vector3(0.75f, -1, 0)); vectorList.Add(new Vector3(1, -0.75f, 0));
+        vectorList.Add(new Vector3(0.75f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.75f)); vectorList.Add(new Vector3(-0.75f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.75f));
+        vectorList.Add(new Vector3(-0.75f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.75f)); vectorList.Add(new Vector3(0.75f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.75f));
+        vectorList.Add(new Vector3(0, -0.75f, 1)); vectorList.Add(new Vector3(0, -1, 0.75f)); vectorList.Add(new Vector3(0, -0.75f, -1)); vectorList.Add(new Vector3(0, -1, -0.75f));
+        vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1)); vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(-0.75f, -1, 1));
+        vectorList.Add(new Vector3(-1, -0.75f, 1)); vectorList.Add(new Vector3(0.75f, -1, 1)); vectorList.Add(new Vector3(1, -0.75f, 1)); vectorList.Add(new Vector3(1, -1, 0.75f));
+        vectorList.Add(new Vector3(1, -0.75f, -1)); vectorList.Add(new Vector3(1, -1, -0.75f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.75f, -1, -1));
+        vectorList.Add(new Vector3(0.75f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.75f));
+
+
     }
 
     void Start()
@@ -69,7 +82,7 @@ public class ToolCollider : MonoBehaviour
             if (minDistanceTumor <= Constants.TotalMaxDistance && minDistanceTumor >= 0)
             {
                 float scaledValue = Scaled(minDistanceTumor, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
-                audioManager.SetPitch(Constants.MarginsSound, Constants.MaxPitch - scaledValue);
+                audioManager.SetPitch(Constants.MarginsSound, Constants.MinPitch + scaledValue);
                 //Debug.Log("Pitch:" + (Constants.MaxPitch - scaledValue));
             }
         }
@@ -122,7 +135,6 @@ public class ToolCollider : MonoBehaviour
         // play sound and update text depending on the area
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            audioManager.Stop(Constants.OuterAreaSound);
             audioManager.Play(Constants.MarginsSound);
             UpdateCanvas(color: Color.cyan, "You are too far away from the tumor");
         }
@@ -148,7 +160,6 @@ public class ToolCollider : MonoBehaviour
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
             audioManager.Stop(Constants.MarginsSound);
-            audioManager.Play(Constants.OuterAreaSound);
             UpdateCanvas(color: Color.blue, "Outside the surgical field!");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))

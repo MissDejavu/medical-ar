@@ -568,13 +568,6 @@ MonoBehaviour:
     source: {fileID: 0}
     highPassFilter: {fileID: 0}
     loop: 1
-  - name: NoArea
-    clip: {fileID: 8300000, guid: 8d344aa270fa3e54790ed515cf3b06e6, type: 3}
-    volume: 0.15
-    pitch: 1.5
-    source: {fileID: 0}
-    highPassFilter: {fileID: 0}
-    loop: 0
   - name: Margins
     clip: {fileID: 8300000, guid: 48904cb9f7946974abb57be7a8f93779, type: 3}
     volume: 1
