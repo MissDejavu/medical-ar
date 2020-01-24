@@ -3,8 +3,8 @@
 public class ToolController : MonoBehaviour
 {
 
-    [SerializeField]
-    private float speed = 1;
+   // [SerializeField]
+   // private float speed = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -17,8 +17,8 @@ public class ToolController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector3 movement = new Vector3(horizontal, vertical);
-        transform.position += movement * Time.deltaTime * speed; // make movement framerate independent
+      //  Vector3 movement = new Vector3(horizontal, vertical);
+      //  transform.position += movement * Time.deltaTime * speed; // make movement framerate independent
 
     }
 }

@@ -17,7 +17,7 @@ public class ToolCollider : MonoBehaviour
     readonly List<Vector3> vectorList = new List<Vector3>();
 
     //For raycasting
-    public float maxRayDistance = Mathf.Infinity;
+    public float maxRayDistance = 0.5f; // 50cm
 
     void Awake()
     {
@@ -118,7 +118,6 @@ public class ToolCollider : MonoBehaviour
             {
                 audioManager.SetHighPassFrequency(Constants.MeanFrequency);
                 vesselDistance.text = "";
-                Debug.Log("");
             }
         }
         else
@@ -191,10 +190,10 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
-            Debug.DrawRay(transform.position, ray.direction, Color.green, 1000, false);
+            Debug.DrawRay(transform.position, ray.direction, Color.green, 0.5f, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
-                //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
                 if (hit.collider.name == "Tumor")
                 {
                     distances.Add(hit.distance);
@@ -217,7 +216,7 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
-            Debug.DrawRay(transform.position, ray.direction, Color.blue, 1000, false);
+            //Debug.DrawRay(transform.position, ray.direction, Color.blue, 1000, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
                 //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);

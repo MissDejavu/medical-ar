@@ -6,10 +6,10 @@ public static class Constants
     public const bool DebugLogAll = false;
 
     // -----------distances & sizes-----------------
-    public const float CuttingAreaSize = 0.05f;
-    public const float ErrorMarginSize = 0.15f;
+    public const float CuttingAreaSize = 0.02f;
+    public const float ErrorMarginSize = 0.01f;
     public const float TotalMaxDistance = CuttingAreaSize + 2 * ErrorMarginSize; //total max distance from the tumor
-    public const float MaxObstacleDistance = 0.15f; //lower than the max distance to blood vessel triggers a sonification
+    public const float MaxObstacleDistance = 0.01f; //lower than the max distance to blood vessel triggers a sonification
 
     // -----------sound names-----------------------
     public const string OuterAreaSound = "NoArea";
