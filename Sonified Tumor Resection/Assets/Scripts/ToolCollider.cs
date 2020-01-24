@@ -190,7 +190,7 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
-            Debug.DrawRay(transform.position, ray.direction, Color.green, 0.5f, false);
+            Debug.DrawRay(transform.position, ray.direction, Color.green, 0.2f, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
                 Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
