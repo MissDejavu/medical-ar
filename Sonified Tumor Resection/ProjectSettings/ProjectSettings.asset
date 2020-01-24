@@ -154,7 +154,7 @@ PlayerSettings:
       protectedContext: 0
       v2Signing: 0
     enable360StereoCapture: 0
-  isWsaHolographicRemotingEnabled: 0
+  isWsaHolographicRemotingEnabled: 1
   protectGraphicsMemory: 0
   enableFrameTimingStats: 0
   useHDRDisplay: 0
@@ -312,10 +312,15 @@ PlayerSettings:
     m_Devices:
     - Oculus
     - OpenVR
+  - m_BuildTarget: Windows Store Apps
+    m_Enabled: 1
+    m_Devices:
+    - Vuforia
+    - WindowsMR
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   openGLRequireES32: 0
-  vuforiaEnabled: 0
+  vuforiaEnabled: 1
   m_TemplateCustomTags: {}
   mobileMTRendering:
     Android: 1
