@@ -12,7 +12,6 @@ public static class Constants
     public const float MaxObstacleDistance = 0.01f; //lower than the max distance to blood vessel triggers a sonification
 
     // -----------sound names-----------------------
-    public const string OuterAreaSound = "NoArea";
     public const string MarginsSound = "Margins";
     public const string TumorSound = "Tumor";
     public const string BackgroundSound = "Background";

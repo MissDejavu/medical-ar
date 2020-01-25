@@ -51,8 +51,6 @@ public class ToolCollider : MonoBehaviour
         vectorList.Add(new Vector3(-1, -0.75f, 1)); vectorList.Add(new Vector3(0.75f, -1, 1)); vectorList.Add(new Vector3(1, -0.75f, 1)); vectorList.Add(new Vector3(1, -1, 0.75f));
         vectorList.Add(new Vector3(1, -0.75f, -1)); vectorList.Add(new Vector3(1, -1, -0.75f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.75f, -1, -1));
         vectorList.Add(new Vector3(0.75f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.75f));
-        
-        
     }
 
     void Start()
@@ -92,7 +90,7 @@ public class ToolCollider : MonoBehaviour
         else
         {
             //Debug.Log("No valid min distance. Your scalpel is not well positioned towards or the vessel.");
-            vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";  // TODO don't show?
+            //vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";  // TODO don't show?
         }
 
         //reset distances
@@ -141,7 +139,6 @@ public class ToolCollider : MonoBehaviour
             audioManager.Stop(Constants.MarginsSound);
             UpdateCanvas(color: Color.blue, "Outside the surgical field!");
         }
-
     }
     // change sound in relation to obstacle distance and update canvas
     void HandleObstacleDistance(float distance)

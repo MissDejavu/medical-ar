@@ -27,6 +27,10 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
+            if (s.name == "Margins" || s.name == "Tumor")
+            {
+                s.source.playOnAwake = false;
+            }
         }
 
         if (sounds.Length <= 0)
@@ -42,8 +46,6 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         SetVolume("Margins", 0.5f);
-        //Debug.Log("start background sound");
-        //Play("Background");
     }
 
     public void SetVolume(string name, float value)
