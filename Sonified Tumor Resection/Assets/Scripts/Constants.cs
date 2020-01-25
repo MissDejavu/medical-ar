@@ -17,12 +17,15 @@ public static class Constants
     public const string BackgroundSound = "Background";
     // -----------sound param+eters-----------------
     public const float MinVolume = 0.1f;
-    public const float MaxVolume = 2f;
+    public const float MaxVolume = 2.0f;
 
     public const float MinPitch = 0.025f;
     public const float MaxPitch = 2.0f;
 
     public const float MinFrequency = 2000.0f;
     public const float MaxFrequency = 10.0f;
-    public const float MeanFrequency = 100.0f;
+    public const float MeanHighCutFrequency = 100.0f;
+    public const float MeanLowCutFrequency = 8000.0f;
+    public const float MeanDistortionLevel = 0.0f;
+    public const float MaxDistortionLevel = 0.4f;
 }
