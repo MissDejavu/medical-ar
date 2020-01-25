@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 //This script handles everything with playing sounds and displaying texts regarding the distance between tool tip and tumor
 public class ToolCollider : MonoBehaviour
@@ -9,29 +9,48 @@ public class ToolCollider : MonoBehaviour
     public GameObject toolTip;
     public Text tumorDistance;
     public Text vesselDistance;
-    public Text alertText;
-    public Text currentArea;
+    public Text currentText;
     public AudioManager audioManager;
 
     List<float> distancesTumor = new List<float>();
     List<float> distancesVessel = new List<float>();
-    List<Vector3> vectorList = new List<Vector3>();
+    readonly List<Vector3> vectorList = new List<Vector3>();
 
     //For raycasting
-    public float maxRayDistance = Mathf.Infinity;
+    public float maxRayDistance = 0.2f; // 20cm 
 
     void Awake()
     {
-        vectorList.Add(Vector3.down); vectorList.Add(Vector3.up); vectorList.Add(Vector3.left); vectorList.Add(Vector3.right); vectorList.Add(Vector3.forward); vectorList.Add(Vector3.back);
-        vectorList.Add(new Vector3(1, 1, 0)); vectorList.Add(new Vector3(-1, 1, 0)); vectorList.Add(new Vector3(-1, -1, 0)); vectorList.Add(new Vector3(1, -1, 0));
-        vectorList.Add(new Vector3(1, 0, 1)); vectorList.Add(new Vector3(-1, 0, 1)); vectorList.Add(new Vector3(-1, 0, -1)); vectorList.Add(new Vector3(1, 0, -1));
-        vectorList.Add(new Vector3(0, 1, 1)); vectorList.Add(new Vector3(0, -1, 1)); vectorList.Add(new Vector3(0, -1, -1)); vectorList.Add(new Vector3(0, 1, -1));
-        vectorList.Add(new Vector3(1, 0.5f, 0)); vectorList.Add(new Vector3(0.5f, 1, 0)); vectorList.Add(new Vector3(-0.5f, 1, 0)); vectorList.Add(new Vector3(-1, 0.5f, 0));
+        //2D
+        vectorList.Add(Vector3.down); vectorList.Add(Vector3.left); vectorList.Add(Vector3.right); vectorList.Add(Vector3.forward); vectorList.Add(Vector3.back);
+        vectorList.Add(new Vector3(-1, -1, 0)); vectorList.Add(new Vector3(1, -1, 0)); vectorList.Add(new Vector3(1, 0, 1)); vectorList.Add(new Vector3(-1, 0, 1)); 
+        vectorList.Add(new Vector3(-1, 0, -1)); vectorList.Add(new Vector3(1, 0, -1)); vectorList.Add(new Vector3(0, -1, 1)); vectorList.Add(new Vector3(0, -1, -1));
         vectorList.Add(new Vector3(-0.5f, -1, 0)); vectorList.Add(new Vector3(-1, -0.5f, 0)); vectorList.Add(new Vector3(0.5f, -1, 0)); vectorList.Add(new Vector3(1, -0.5f, 0));
         vectorList.Add(new Vector3(0.5f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.5f)); vectorList.Add(new Vector3(-0.5f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.5f));
         vectorList.Add(new Vector3(-0.5f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.5f)); vectorList.Add(new Vector3(0.5f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.5f));
-        vectorList.Add(new Vector3(0, 0.5f, 1)); vectorList.Add(new Vector3(0, 1, 0.5f)); vectorList.Add(new Vector3(0, -0.5f, 1)); vectorList.Add(new Vector3(0, -1, 0.5f));
-        vectorList.Add(new Vector3(0, -0.5f, -1)); vectorList.Add(new Vector3(0, -1, -0.5f)); vectorList.Add(new Vector3(0, 0.5f, -1)); vectorList.Add(new Vector3(0, 1, -0.5f));
+        vectorList.Add(new Vector3(0, -0.5f, 1)); vectorList.Add(new Vector3(0, -1, 0.5f)); vectorList.Add(new Vector3(0, -0.5f, -1)); vectorList.Add(new Vector3(0, -1, -0.5f)); 
+        vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1)); vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(-0.5f, -1, 1)); 
+        vectorList.Add(new Vector3(-1, -0.5f, 1)); vectorList.Add(new Vector3(0.5f, -1, 1)); vectorList.Add(new Vector3(1, -0.5f, 1)); vectorList.Add(new Vector3(1, -1, 0.5f)); 
+        vectorList.Add(new Vector3(1, -0.5f, -1)); vectorList.Add(new Vector3(1, -1, -0.5f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.5f, -1, -1));  
+        vectorList.Add(new Vector3(0.5f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.5f));
+
+        vectorList.Add(new Vector3(-0.25f, -1, 0)); vectorList.Add(new Vector3(-1, -0.25f, 0)); vectorList.Add(new Vector3(0.25f, -1, 0)); vectorList.Add(new Vector3(1, -0.25f, 0));
+        vectorList.Add(new Vector3(0.25f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.25f)); vectorList.Add(new Vector3(-0.25f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.25f));
+        vectorList.Add(new Vector3(-0.25f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.25f)); vectorList.Add(new Vector3(0.25f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.25f));
+        vectorList.Add(new Vector3(0, -0.25f, 1)); vectorList.Add(new Vector3(0, -1, 0.25f)); vectorList.Add(new Vector3(0, -0.25f, -1)); vectorList.Add(new Vector3(0, -1, -0.25f));
+        vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1)); vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(-0.25f, -1, 1));
+        vectorList.Add(new Vector3(-1, -0.25f, 1)); vectorList.Add(new Vector3(0.25f, -1, 1)); vectorList.Add(new Vector3(1, -0.25f, 1)); vectorList.Add(new Vector3(1, -1, 0.25f));
+        vectorList.Add(new Vector3(1, -0.25f, -1)); vectorList.Add(new Vector3(1, -1, -0.25f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.25f, -1, -1));
+        vectorList.Add(new Vector3(0.25f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.25f));
+
+        vectorList.Add(new Vector3(-0.75f, -1, 0)); vectorList.Add(new Vector3(-1, -0.75f, 0)); vectorList.Add(new Vector3(0.75f, -1, 0)); vectorList.Add(new Vector3(1, -0.75f, 0));
+        vectorList.Add(new Vector3(0.75f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.75f)); vectorList.Add(new Vector3(-0.75f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.75f));
+        vectorList.Add(new Vector3(-0.75f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.75f)); vectorList.Add(new Vector3(0.75f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.75f));
+        vectorList.Add(new Vector3(0, -0.75f, 1)); vectorList.Add(new Vector3(0, -1, 0.75f)); vectorList.Add(new Vector3(0, -0.75f, -1)); vectorList.Add(new Vector3(0, -1, -0.75f));
+        vectorList.Add(new Vector3(-1, -1, 1)); vectorList.Add(new Vector3(1, -1, 1)); vectorList.Add(new Vector3(1, -1, -1)); vectorList.Add(new Vector3(-0.75f, -1, 1));
+        vectorList.Add(new Vector3(-1, -0.75f, 1)); vectorList.Add(new Vector3(0.75f, -1, 1)); vectorList.Add(new Vector3(1, -0.75f, 1)); vectorList.Add(new Vector3(1, -1, 0.75f));
+        vectorList.Add(new Vector3(1, -0.75f, -1)); vectorList.Add(new Vector3(1, -1, -0.75f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.75f, -1, -1));
+        vectorList.Add(new Vector3(0.75f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.75f));
     }
 
     void Start()
@@ -39,124 +58,161 @@ public class ToolCollider : MonoBehaviour
         tumor = GameObject.Find("Tumor");
         toolTip = GameObject.Find("ToolTip");
         tumorDistance.text = "";
-        alertText.text = "";
-        currentArea.text = "";
+        currentText.text = "";
         audioManager = FindObjectOfType<AudioManager>();
     }
 
     void Update()
     {
+        // get all distances from rays
         distancesTumor = MeasureDistanceToTumor(vectorList);
         distancesVessel = MeasureDistanceToVessel(vectorList);
 
+        // -------- DISTANCE TUMOR -------------
         if (distancesTumor.Count > 0)
         {
-            float minDistanceTumor = FindMinDistance(distancesTumor);
-            Debug.Log("Min distance to tumor: " + minDistanceTumor);
-            tumorDistance.text = "Distance to tumor: " + minDistanceTumor;
+            float minDistanceTumor = FindMinDistance(distancesTumor); // get smallest distance
+            HandleTumorDistance(minDistanceTumor); 
         }
         else
         {
-            Debug.Log("No valid min distance. Your scalpel is not well positioned towards the tumor.");
-            tumorDistance.text = "Distance to tumor cannot be measured. Change position of your scapel.";
+            //Debug.Log("Could not calculate any distance to tumor.");
+            tumorDistance.text = "Distance cannot be measured.";
         }
+        //--------------------------------------
 
+        //-----------DISTANCE OBSTACLES---------
         if (distancesVessel.Count > 0)
         {
-            float minDistanceVessel = FindMinDistance(distancesVessel);
-            Debug.Log("Min distance to vessel: " + minDistanceVessel);
-            vesselDistance.text = "Distance to vessel: " + minDistanceVessel;
+            float minDistanceVessel = FindMinDistance(distancesVessel); // get smallest distance
+            HandleObstacleDistance(minDistanceVessel);
         }
         else
         {
-            Debug.Log("No valid min distance. Your scalpel is not well positioned towards or the vessel.");
-            vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";
+            //Debug.Log("No valid min distance. Your scalpel is not well positioned towards or the vessel.");
+            //vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";  // TODO don't show?
         }
+
+        //reset distances
         distancesTumor.Clear();
         distancesVessel.Clear();
     }
 
-    void OnTriggerEnter(Collider col)
+    // change sound in relation to tumor distance and update canvas
+    void HandleTumorDistance(float distance)
     {
-        audioManager.StopAll();
-        // start playing sound depending on the area that was entered
-        if (col.gameObject.CompareTag("OuterErrorMargin"))
+        tumorDistance.text = "Distance to tumor: " + distance;  // update distance on canvas
+
+        // tumor area
+        if(distance <= 0.004)  // TODO handle touching the tumor -> problem, no distance from rays
         {
-            audioManager.Play("OuterErrorMargin");
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: outer error margin of tumor";
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too far away from the tumor";
+            audioManager.Stop(Constants.MarginsSound);
+            audioManager.Play(Constants.TumorSound);
+            UpdateCanvas(color: Color.red, "Attention! You touched the tumor!");
         }
-        else if (col.gameObject.CompareTag("ResectionArea"))
+        // margins
+        else if (distance > 0.004 && distance <= Constants.TotalMaxDistance)
         {
-            audioManager.Play("ResectionArea");
-            currentArea.color = Color.green;
-            currentArea.text = "Current area: resection area";
-            alertText.color = Color.green;
-            alertText.text = "You can cut here!";
+            float scaledValue = Scaled(distance, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
+            audioManager.SetPitch(Constants.MarginsSound, Constants.MinPitch + scaledValue);
+            audioManager.Stop(Constants.TumorSound); // TODO try to avoid unnecessary updates?
+            audioManager.Play(Constants.MarginsSound); // TODO try to avoid unnecessary updates?
+            // inner error margin area
+            if (distance >= 0.004 && distance < Constants.ErrorMarginSize)
+            {
+                UpdateCanvas(color: Color.magenta, "You are near the tumor!");
+            }
+            // cutting area 
+            else if (distance >= Constants.ErrorMarginSize && distance < Constants.ErrorMarginSize + Constants.CuttingAreaSize)
+            {
+                UpdateCanvas(color: Color.green, "Resection area");
+            }
+            // outer error margin
+            else
+            {
+                UpdateCanvas(color: Color.cyan, "Too far away from the tumor");
+            }         
         }
-        else if (col.gameObject.CompareTag("InnerErrorMargin"))
+        // outer area
+        else
         {
-            audioManager.Play("InnerErrorMargin");
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: inner error margin of tumor";
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too close to the tumor";
+            audioManager.Stop(Constants.MarginsSound);
+            UpdateCanvas(color: Color.blue, "Outside the surgical field!");
         }
-        else if (col.gameObject.CompareTag("Tumor"))
+    }
+    // change sound in relation to obstacle distance and update canvas
+    void HandleObstacleDistance(float distance)
+    {
+        // do sth only when smallest distance in smaller than threshold
+        if (distance <= Constants.MaxObstacleDistance)
         {
-            audioManager.LoopStart("Tumor");
-            FindObjectOfType<AudioManager>().Play("Tumor");
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: tumor area";
-            alertText.color = Color.red;
-            alertText.text = "Attention! You touched the tumor!";
+            // New sound with pitch changing
+            float scaledValue = Scaled(distance, 0, Constants.MaxObstacleDistance, Constants.MinFrequency, Constants.MaxFrequency);
+            audioManager.SetLowPassFrequency(Constants.MarginsSound, scaledValue + 2500);
+            audioManager.SetDistortionLevel(Constants.MarginsSound, Constants.MaxDistortionLevel);
+            //Debug.Log("scaledValue: " + scaledValue);
+            vesselDistance.text = "Close to vessel! (Distance:  " + distance + ")";
+        }
+        else
+        {
+            audioManager.SetHighPassFrequency(Constants.MarginsSound, Constants.MeanHighCutFrequency);  // TODO try to avoid unnecessary updates?
+            audioManager.SetLowPassFrequency(Constants.MarginsSound, Constants.MeanLowCutFrequency);
+            audioManager.SetDistortionLevel(Constants.MarginsSound, Constants.MeanDistortionLevel);
+            vesselDistance.text = "";
         }
     }
 
+    /*
+    void OnTriggerEnter(Collider col)
+    {           
+        // play sound and update text depending on the area
+        if (col.gameObject.CompareTag("OuterErrorMargin"))
+        {
+            audioManager.Play(Constants.MarginsSound);
+            UpdateCanvas(color: Color.cyan, "You are too far away from the tumor");
+        }
+        else if (col.gameObject.CompareTag("ResectionArea"))
+        {
+            UpdateCanvas(color: Color.green,"Resection area");
+        }
+        else if (col.gameObject.CompareTag("InnerErrorMargin"))
+        {
+            UpdateCanvas(color: Color.magenta, "You are near the tumor!");
+        }
+        else if (col.gameObject.CompareTag("Tumor"))
+        {
+            audioManager.Stop(Constants.MarginsSound);
+            audioManager.Play(Constants.TumorSound);
+            UpdateCanvas(color: Color.red, "Attention! You touched the tumor!");
+        }
+    }
+    */
+
+    /*
     void OnTriggerExit(Collider col)
     {
         // stop sound depending on the area that was exited
         if (col.gameObject.CompareTag("OuterErrorMargin"))
         {
-            audioManager.Stop("OuterErrorMargin");
-            audioManager.Play("NoArea");
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too far away from the tumor";
-            currentArea.color = Color.red;
-            currentArea.text = "No area for cutting";
+            audioManager.Stop(Constants.MarginsSound);
+            UpdateCanvas(color: Color.blue, "Outside the surgical field!");
         }
         else if (col.gameObject.CompareTag("ResectionArea"))
         {
-            audioManager.Stop("ResectionArea");
-            audioManager.Play("OuterErrorMargin");
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too far away from the tumor";
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: outer error margin of tumor";
+            UpdateCanvas(color: Color.cyan, "You are too far away from the tumor");
         }
         else if (col.gameObject.CompareTag("InnerErrorMargin"))
         {
-            audioManager.Stop("InnerErrorMargin");
-            audioManager.Play("ResectionArea");
-            alertText.color = Color.green;
-            alertText.text = "You can cut here!";
-            currentArea.color = Color.green;
-            currentArea.text = "Current area: resection area";
+            UpdateCanvas(color: Color.green, "Resection area");
         }
         else if (col.gameObject.CompareTag("Tumor"))
         {
-
-            audioManager.LoopStop("Tumor");
-            audioManager.Stop("Tumor");
-            audioManager.Play("InnerErrorMargin");
-            alertText.color = Color.red;
-            alertText.text = "Do not cut here! You are too close to the tumor";
-            currentArea.color = Color.red;
-            currentArea.text = "Current area: inner error margin of tumor";
+            audioManager.Stop(Constants.TumorSound);
+            audioManager.Play(Constants.MarginsSound);
+            UpdateCanvas(color: Color.magenta, "You are near the tumor!");
         }
     }
+    */
 
     List<float> MeasureDistanceToTumor(List<Vector3> vector3List)
     {
@@ -171,11 +227,10 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
-            Debug.DrawRay(transform.position, ray.direction, Color.green, 1000, false);
-            Debug.Log("New ray");
+            Debug.DrawRay(transform.position, ray.direction, Color.green, 0.1f, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
-                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
                 if (hit.collider.name == "Tumor")
                 {
                     distances.Add(hit.distance);
@@ -198,18 +253,13 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
-            Debug.DrawRay(transform.position, ray.direction, Color.green, 1000, false);
-            Debug.Log("New ray");
+            //Debug.DrawRay(transform.position, ray.direction, Color.blue, 1000, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
-                Debug.Log("New ray");
-                if (Physics.Raycast(ray, out hit, maxRayDistance))
+                //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                if (hit.collider.name == "BloodVessel")
                 {
-                    Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
-                    if (hit.collider.name == "BloodVessel")
-                    {
-                        distances.Add(hit.distance);
-                    }
+                    distances.Add(hit.distance);
                 }
             }
         }
@@ -230,5 +280,22 @@ public class ToolCollider : MonoBehaviour
             }
         }
         return (minDistance);
+    }
+
+    public void UpdateCanvas(Color color, string text)
+    {
+        currentText.color = color;
+        currentText.text = text;
+    }
+
+    // scale a value (value) from the range [originMin, originMax] to a new range [targetMin, targetMax]
+    public float Scaled(float value, float originMin, float originMax, float targetMin, float targetMax)
+    {
+        if (value > originMax || value < originMin)
+        {
+            Debug.LogWarning("Can't scale. Value not in range.");
+            return 0;       // TODO throw error?
+        }
+        return ((value - originMin) / (originMax - originMin)) * (targetMax - targetMin) + targetMin;
     }
 }

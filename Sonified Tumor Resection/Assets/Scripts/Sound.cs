@@ -5,17 +5,22 @@
 [System.Serializable]
 public class Sound
 {
+    //sound settings
     public string name;
-
+    public bool loop;
     public AudioClip clip;
-
-    [Range(0f, 1f)]
+    [Range(Constants.MinVolume, Constants.MaxVolume)]
     public float volume;
-    [Range(.1f, 3f)]
+    [Range(Constants.MinPitch, Constants.MaxPitch)]
     public float pitch;
 
-    [HideInInspector]
+    //[HideInInspector]
     public AudioSource source;
+    public GameObject gameObject;
 
-    public bool loop;
+    //Audio filters
+    public AudioHighPassFilter highPassFilter;
+    public AudioLowPassFilter lowPassFilter;
+    public AudioDistortionFilter distortionFilter;
+    public AudioReverbFilter reverbFilter; 
 }

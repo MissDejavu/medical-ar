@@ -3,6 +3,9 @@
 //use this script to move an object with keys you like (only translation)
 public class MoveWithKeys : MonoBehaviour
 {
+    [SerializeField]
+    private float speed = 1;
+
     //y axis
     public KeyCode pressUp; 
     public KeyCode pressDown;
@@ -25,37 +28,37 @@ public class MoveWithKeys : MonoBehaviour
      if (Input.GetKey(pressUp))
         {
             Vector3 objectPosition = transform.position;
-            objectPosition.y += 0.01f;
+            objectPosition.y += 0.01f * speed;
             transform.position = objectPosition;
         }
         if (Input.GetKey(pressDown))
         {
             Vector3 objectPosition = transform.position;
-            objectPosition.y -= 0.01f;
+            objectPosition.y -= 0.01f * speed;
             transform.position = objectPosition;
         }
         if (Input.GetKey(pressLeft))
         {
             Vector3 objectPosition = transform.position;
-            objectPosition.x -= 0.01f;
+            objectPosition.x -= 0.01f * speed;
             transform.position = objectPosition;
         }
         if (Input.GetKey(pressRight))
         {
             Vector3 objectPosition = transform.position;
-            objectPosition.x += 0.01f;
+            objectPosition.x += 0.01f * speed;
             transform.position = objectPosition;
         }
         if (Input.GetKey(pressForward))
         {
             Vector3 objectPosition = transform.position;
-            objectPosition.z -= 0.01f;
+            objectPosition.z -= 0.01f * speed;
             transform.position = objectPosition;
         }
         if (Input.GetKey(pressBackward))
         {
             Vector3 objectPosition = transform.position;
-            objectPosition.z += 0.01f;
+            objectPosition.z += 0.01f * speed;
             transform.position = objectPosition;
         }
     }
