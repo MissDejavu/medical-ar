@@ -87,8 +87,12 @@ public class AudioManager : MonoBehaviour
         // check if sound is already playing - avoid restarting
         if (!s.source.isPlaying)
         {
-            Debug.Log("playing sound: " + name);
+            Debug.Log("Start playing sound: " + name);
             s.source.Play();
+        }
+        else
+        {
+            Debug.Log("Already playing sound: " + name);
         }
     }
 

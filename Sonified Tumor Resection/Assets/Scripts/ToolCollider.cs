@@ -86,7 +86,7 @@ public class ToolCollider : MonoBehaviour
         //-----------DISTANCE OBSTACLES---------
         if (distancesVessel.Count > 0)
         {
-            float minDistanceVessel = FindMinDistance(distancesVessel); // smallest distance
+            float minDistanceVessel = FindMinDistance(distancesVessel); // get smallest distance
             HandleObstacleDistance(minDistanceVessel);
         }
         else
@@ -118,19 +118,20 @@ public class ToolCollider : MonoBehaviour
             float scaledValue = Scaled(distance, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
             audioManager.SetPitch(Constants.MarginsSound, Constants.MinPitch + scaledValue);
             // inner error margin area
-            if (distance < Constants.ErrorMarginSize)
+            if (distance >= 0.004 && distance < Constants.ErrorMarginSize)
             {
                 audioManager.Stop(Constants.TumorSound);    // TODO try to avoid unnecessary updates?
                 audioManager.Play(Constants.MarginsSound);  // TODO try to avoid unnecessary updates?
                 UpdateCanvas(color: Color.magenta, "You are near the tumor!");
             }
             // cutting area 
-            else if (distance < Constants.ErrorMarginSize + Constants.CuttingAreaSize)
+            if (distance >= Constants.ErrorMarginSize && distance < Constants.ErrorMarginSize + Constants.CuttingAreaSize)
             {
+                audioManager.Play(Constants.MarginsSound);
                 UpdateCanvas(color: Color.green, "Resection area");
             }
             // outer error margin
-            else
+            if (distance >= Constants.ErrorMarginSize + Constants.CuttingAreaSize)
             {
                 audioManager.Play(Constants.MarginsSound);
                 UpdateCanvas(color: Color.cyan, "Too far away from the tumor");
