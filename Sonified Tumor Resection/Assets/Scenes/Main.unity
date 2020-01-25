@@ -2513,7 +2513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b0fbd71be98d84484cdd201f4e3132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.2
+  speed: 0.15
   pressUp: 273
   pressDown: 274
   pressLeft: 276

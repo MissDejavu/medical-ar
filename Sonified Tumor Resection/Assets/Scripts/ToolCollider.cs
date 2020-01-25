@@ -106,21 +106,22 @@ public class ToolCollider : MonoBehaviour
         tumorDistance.text = "Distance to tumor: " + distance;  // update distance on canvas
 
         // tumor area
-        if(distance <= 0.0025)  // TODO handle touching the tumor -> problem, no distance from rays
+        if(distance <= 0.004)  // TODO handle touching the tumor -> problem, no distance from rays
         {
             audioManager.Stop(Constants.MarginsSound);
             audioManager.Play(Constants.TumorSound);
             UpdateCanvas(color: Color.red, "Attention! You touched the tumor!");
         }
         // margins
-        else if (distance > 0.0025 && distance <= Constants.TotalMaxDistance)
+        else if (distance > 0.004 && distance <= Constants.TotalMaxDistance)
         {
             float scaledValue = Scaled(distance, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
             audioManager.SetPitch(Constants.MarginsSound, Constants.MinPitch + scaledValue);
-
             // inner error margin area
             if (distance < Constants.ErrorMarginSize)
             {
+                audioManager.Stop(Constants.TumorSound);    // TODO try to avoid unnecessary updates?
+                audioManager.Play(Constants.MarginsSound);  // TODO try to avoid unnecessary updates?
                 UpdateCanvas(color: Color.magenta, "You are near the tumor!");
             }
             // cutting area 

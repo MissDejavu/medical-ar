@@ -39,12 +39,16 @@ public class AudioManager : MonoBehaviour
         }
 
         highPassFilter = gameObject.AddComponent<AudioHighPassFilter>();
+
+        Debug.Log("AudioManager awake done");
     }
 
     void Start()
     {
         Debug.Log("start background sound");
         Play("Background");
+
+        SetVolume("Margins", 0.25f);
     }
 
     public void SetVolume(string name, float value)
@@ -72,6 +76,39 @@ public class AudioManager : MonoBehaviour
         s.source.pitch = Mathf.SmoothDamp(1, value, ref velocity, smoothTime);
     }
 
+    public void Play (string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+        // check if sound is already playing - avoid restarting
+        if (!s.source.isPlaying)
+        {
+            Debug.Log("playing sound: " + name);
+            s.source.Play();
+        }
+    }
+
+  public void Stop (string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+        Debug.Log("Stopping sound: " + name);
+        s.source.Stop();
+    }
+
+    public void SetHighPassFrequency (float frequency)
+    {
+        highPassFilter.cutoffFrequency = frequency;
+    }
+
     public void StopAll()
     {
         for (int i = 0; i < sounds.Length; i++)
@@ -89,32 +126,5 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.loop = value;
-    }
-
-    public void Play (string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        s.source.Play();
-    }
-
-  public void Stop (string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        s.source.Stop();
-    }
-
-    public void SetHighPassFrequency (float frequency)
-    {
-        highPassFilter.cutoffFrequency = frequency;
     }
 }
