@@ -147,9 +147,10 @@ public class ToolCollider : MonoBehaviour
         if (distance <= Constants.MaxObstacleDistance)
         {
             // New sound with pitch changing
-            float scaledValue = Scaled(distance, 0, Constants.MaxObstacleDistance, Constants.MinFrequency, Constants.MaxFrequency);
-            audioManager.SetLowPassFrequency(Constants.MarginsSound, scaledValue + 2500);
-            audioManager.SetDistortionLevel(Constants.MarginsSound, Constants.MaxDistortionLevel);
+            float scaledValueFreq = Scaled(distance, 0, Constants.MaxObstacleDistance, Constants.MinFrequency, Constants.MaxFrequency);
+            audioManager.SetLowPassFrequency(Constants.MarginsSound, scaledValueFreq + 2500);
+            float scaledValueDist = Scaled(distance, 0, Constants.MaxObstacleDistance, Constants.MaxDistortionLevel, Constants.MinDistortionLevel);
+            audioManager.SetDistortionLevel(Constants.MarginsSound, scaledValueDist);
             //Debug.Log("scaledValue: " + scaledValue);
             vesselDistance.text = "Close to vessel! (Distance:  " + distance + ")";
         }

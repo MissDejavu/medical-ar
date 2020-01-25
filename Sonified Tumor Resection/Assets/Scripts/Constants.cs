@@ -27,5 +27,6 @@ public static class Constants
     public const float MeanHighCutFrequency = 100.0f;
     public const float MeanLowCutFrequency = 8000.0f;
     public const float MeanDistortionLevel = 0.0f;
-    public const float MaxDistortionLevel = 0.4f;
+    public const float MinDistortionLevel = 0.2f;
+    public const float MaxDistortionLevel = 0.8f;
 }
