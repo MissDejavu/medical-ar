@@ -17,7 +17,7 @@ public class ToolCollider : MonoBehaviour
     readonly List<Vector3> vectorList = new List<Vector3>();
 
     //For raycasting
-    public float maxRayDistance = 0.5f; // 50cm
+    public float maxRayDistance = 0.2f; // 20cm 
 
     void Awake()
     {
@@ -66,69 +66,103 @@ public class ToolCollider : MonoBehaviour
 
     void Update()
     {
+        // get all distances from rays
         distancesTumor = MeasureDistanceToTumor(vectorList);
         distancesVessel = MeasureDistanceToVessel(vectorList);
 
+        // -------- DISTANCE TUMOR -------------
         if (distancesTumor.Count > 0)
         {
-            float minDistanceTumor = FindMinDistance(distancesTumor);
-            if (Constants.DebugLogAll)
-            {
-                //Debug.Log("Min distance to tumor: " + minDistanceTumor);
-            }
-            tumorDistance.text = "Distance to tumor: " + minDistanceTumor;
-
-            //update sound
-            if (minDistanceTumor <= Constants.TotalMaxDistance && minDistanceTumor >= 0)
-            {
-                float scaledValue = Scaled(minDistanceTumor, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
-                audioManager.SetPitch(Constants.MarginsSound, Constants.MinPitch + scaledValue);
-                //Debug.Log("Pitch:" + (Constants.MaxPitch - scaledValue));
-            }
+            float minDistanceTumor = FindMinDistance(distancesTumor); // get smallest distance
+            HandleTumorDistance(minDistanceTumor); 
         }
         else
         {
-            //Debug.Log("No valid min distance. Your scalpel is not well positioned towards the tumor.");
-            tumorDistance.text = "Distance to tumor cannot be measured. Change position of your scapel.";
+            //Debug.Log("Could not calculate any distance to tumor.");
+            tumorDistance.text = "Distance cannot be measured.";
         }
+        //--------------------------------------
 
+        //-----------DISTANCE OBSTACLES---------
         if (distancesVessel.Count > 0)
         {
-            float minDistanceVessel = FindMinDistance(distancesVessel);
-            if (Constants.DebugLogAll)
-            {
-                //Debug.Log("Min distance to vessel: " + minDistanceVessel);
-            }
-            
-            //update sound
-            if (minDistanceVessel <= Constants.MaxObstacleDistance)
-            {
-                // Same sound with volume changing
-                //float scaledValue = Scaled(minDistanceVessel, 0, Constants.MaxObstacleDistance, Constants.MinVolume, Constants.MaxVolume);
-                //audioManager.SetVolume(Constants.MarginsSound, Constants.MaxVolume - scaledValue);
-                //Debug.Log("Volume:" + (Constants.MaxVolume - scaledValue));
-
-                // New sound with pitch changing
-                float scaledValue = Scaled(minDistanceVessel, 0, Constants.MaxObstacleDistance, Constants.MinFrequency, Constants.MaxFrequency);
-                audioManager.SetHighPassFrequency(scaledValue+1000);
-                Debug.Log("scaledValue: " + scaledValue);
-                vesselDistance.text = "You are nearing a blood vessel! (Distance:  " + minDistanceVessel + ")";
-            }
-            else
-            {
-                audioManager.SetHighPassFrequency(Constants.MeanFrequency);
-                vesselDistance.text = "";
-            }
+            float minDistanceVessel = FindMinDistance(distancesVessel); // smallest distance
+            HandleObstacleDistance(minDistanceVessel);
         }
         else
         {
             //Debug.Log("No valid min distance. Your scalpel is not well positioned towards or the vessel.");
-            vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";
+            vesselDistance.text = "Distance to vessel cannot be measured. Change position of your scapel.";  // TODO don't show?
         }
+
+        //reset distances
         distancesTumor.Clear();
         distancesVessel.Clear();
     }
 
+    // change sound in relation to tumor distance and update canvas
+    void HandleTumorDistance(float distance)
+    {
+        tumorDistance.text = "Distance to tumor: " + distance;  // update distance on canvas
+
+        // tumor area
+        if(distance <= 0.0025)  // TODO handle touching the tumor -> problem, no distance from rays
+        {
+            audioManager.Stop(Constants.MarginsSound);
+            audioManager.Play(Constants.TumorSound);
+            UpdateCanvas(color: Color.red, "Attention! You touched the tumor!");
+        }
+        // margins
+        else if (distance > 0.0025 && distance <= Constants.TotalMaxDistance)
+        {
+            float scaledValue = Scaled(distance, 0, Constants.TotalMaxDistance, Constants.MinPitch, Constants.MaxPitch);
+            audioManager.SetPitch(Constants.MarginsSound, Constants.MinPitch + scaledValue);
+
+            // inner error margin area
+            if (distance < Constants.ErrorMarginSize)
+            {
+                UpdateCanvas(color: Color.magenta, "You are near the tumor!");
+            }
+            // cutting area 
+            else if (distance < Constants.ErrorMarginSize + Constants.CuttingAreaSize)
+            {
+                UpdateCanvas(color: Color.green, "Resection area");
+            }
+            // outer error margin
+            else
+            {
+                audioManager.Play(Constants.MarginsSound);
+                UpdateCanvas(color: Color.cyan, "Too far away from the tumor");
+            }         
+        }
+        // outer area
+        else
+        {
+            audioManager.Stop(Constants.MarginsSound);
+            UpdateCanvas(color: Color.blue, "Outside the surgical field!");
+        }
+
+    }
+    // change sound in relation to obstacle distance and update canvas
+    void HandleObstacleDistance(float distance)
+    {
+        // do sth only when smallest distance in smaller than threshold
+        if (distance <= Constants.MaxObstacleDistance)
+        {
+            // New sound with pitch changing
+            float scaledValue = Scaled(distance, 0, Constants.MaxObstacleDistance, Constants.MinFrequency, Constants.MaxFrequency);
+            audioManager.SetHighPassFrequency(scaledValue + 1000);
+            //Debug.Log("scaledValue: " + scaledValue);
+            vesselDistance.text = "Close to vessel! (Distance:  " + distance + ")";
+        }
+        else
+        {
+            audioManager.SetHighPassFrequency(Constants.MeanFrequency);  // TODO try to avoid unnecessary updates?
+            vesselDistance.text = "";
+        }
+    }
+
+    /*
     void OnTriggerEnter(Collider col)
     {           
         // play sound and update text depending on the area
@@ -152,7 +186,9 @@ public class ToolCollider : MonoBehaviour
             UpdateCanvas(color: Color.red, "Attention! You touched the tumor!");
         }
     }
+    */
 
+    /*
     void OnTriggerExit(Collider col)
     {
         // stop sound depending on the area that was exited
@@ -176,6 +212,7 @@ public class ToolCollider : MonoBehaviour
             UpdateCanvas(color: Color.magenta, "You are near the tumor!");
         }
     }
+    */
 
     List<float> MeasureDistanceToTumor(List<Vector3> vector3List)
     {
@@ -190,10 +227,10 @@ public class ToolCollider : MonoBehaviour
 
         foreach (Ray ray in rays)
         {
-            Debug.DrawRay(transform.position, ray.direction, Color.green, 0.2f, false);
+            Debug.DrawRay(transform.position, ray.direction, Color.green, 0.1f, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
             {
-                Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
+                //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
                 if (hit.collider.name == "Tumor")
                 {
                     distances.Add(hit.distance);
@@ -257,7 +294,7 @@ public class ToolCollider : MonoBehaviour
         if (value > originMax || value < originMin)
         {
             Debug.LogWarning("Can't scale. Value not in range.");
-            return 0;
+            return 0;       // TODO throw error?
         }
         return ((value - originMin) / (originMax - originMin)) * (targetMax - targetMin) + targetMin;
     }

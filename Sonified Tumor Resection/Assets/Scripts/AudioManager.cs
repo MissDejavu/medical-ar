@@ -8,8 +8,7 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     private AudioHighPassFilter highPassFilter;
-
-    // Start is called before the first frame update
+    
     void Awake()
     {
         if (instance == null)
@@ -44,7 +43,7 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        // todo check where the tool is and start the correct sound (would probably always be oOutside the cutting area in the "too far" section)
+        Debug.Log("start background sound");
         Play("Background");
     }
 
