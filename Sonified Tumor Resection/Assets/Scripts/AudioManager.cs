@@ -29,11 +29,7 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
         }
 
-        if (sounds.Length > 0)
-        {
-            //primarySound = sounds[0];
-        }
-        else
+        if (sounds.Length <= 0)
         {
             Debug.LogWarning("No sounds defined!");
         }
@@ -45,10 +41,9 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("start background sound");
-        Play("Background");
-
-        SetVolume("Margins", 0.25f);
+        SetVolume("Margins", 0.5f);
+        //Debug.Log("start background sound");
+        //Play("Background");
     }
 
     public void SetVolume(string name, float value)
