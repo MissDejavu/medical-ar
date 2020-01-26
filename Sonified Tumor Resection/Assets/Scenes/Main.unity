@@ -562,29 +562,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: Tumor
+    loop: 1
     clip: {fileID: 8300000, guid: 53b1e5f8c75639441a66dad90cb0ef87, type: 3}
     volume: 0.5
     pitch: 1
     source: {fileID: 0}
-    highPassFilter: {fileID: 0}
     gameObject: {fileID: 0}
-    loop: 1
+    highPassFilter: {fileID: 0}
+    lowPassFilter: {fileID: 0}
+    distortionFilter: {fileID: 0}
+    reverbFilter: {fileID: 0}
   - name: Margins
+    loop: 1
     clip: {fileID: 8300000, guid: 48904cb9f7946974abb57be7a8f93779, type: 3}
     volume: 1
     pitch: 1
     source: {fileID: 0}
-    highPassFilter: {fileID: 0}
     gameObject: {fileID: 0}
-    loop: 1
+    highPassFilter: {fileID: 0}
+    lowPassFilter: {fileID: 0}
+    distortionFilter: {fileID: 0}
+    reverbFilter: {fileID: 0}
   - name: Background
+    loop: 1
     clip: {fileID: 8300000, guid: b48b6c3aaccde5b4bad1ce7ec72371ee, type: 3}
     volume: 0.5
     pitch: 1
     source: {fileID: 0}
-    highPassFilter: {fileID: 0}
     gameObject: {fileID: 0}
-    loop: 1
+    highPassFilter: {fileID: 0}
+    lowPassFilter: {fileID: 0}
+    distortionFilter: {fileID: 0}
+    reverbFilter: {fileID: 0}
 --- !u!21 &467023469
 Material:
   serializedVersion: 6

@@ -151,6 +151,7 @@ public class ToolCollider : MonoBehaviour
             audioManager.SetLowPassFrequency(Constants.MarginsSound, scaledValueFreq + 2500);
             float scaledValueDist = Scaled(distance, 0, Constants.MaxObstacleDistance, Constants.MaxDistortionLevel, Constants.MinDistortionLevel);
             audioManager.SetDistortionLevel(Constants.MarginsSound, scaledValueDist);
+            audioManager.SetVolume(Constants.MarginsSound, 0.5f);
             //Debug.Log("scaledValue: " + scaledValue);
             vesselDistance.text = "Close to vessel! (Distance:  " + distance + ")";
         }
@@ -159,6 +160,7 @@ public class ToolCollider : MonoBehaviour
             audioManager.SetHighPassFrequency(Constants.MarginsSound, Constants.MeanHighCutFrequency);  // TODO try to avoid unnecessary updates?
             audioManager.SetLowPassFrequency(Constants.MarginsSound, Constants.MeanLowCutFrequency);
             audioManager.SetDistortionLevel(Constants.MarginsSound, Constants.MeanDistortionLevel);
+            audioManager.SetVolume(Constants.MarginsSound, 1.0f);
             vesselDistance.text = "";
         }
     }
