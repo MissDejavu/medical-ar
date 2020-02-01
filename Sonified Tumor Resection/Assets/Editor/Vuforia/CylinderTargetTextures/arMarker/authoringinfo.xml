@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VuforiaUnityInfo version="7.0">
+    <TargetSet version="5.0" toolVersion="2.8.0">
+        <CylinderTarget name="ToolMarkerBigger" version="3.0" targetId="8111a23a2b8b46c8bf6ffc5e220d22bc" sideLength="0.102000" topDiameter="0.032450" bottomDiameter="0.032450" sideImage="ToolMarkerBigger.Body_scaled.jpg"/>
+        <CylinderTarget name="ToolMarker" version="3.0" targetId="83c41135465c41b8bcf10d714102c8ce" sideLength="0.062900" topDiameter="0.020000" bottomDiameter="0.020000" sideImage="ToolMarker.Body_scaled.jpg"/>
+    </TargetSet>
+</VuforiaUnityInfo>

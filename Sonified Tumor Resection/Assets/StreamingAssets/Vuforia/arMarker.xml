@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+    <Tracking>
+        <CylinderTarget name="ToolMarkerBigger" sideLength="0.102000"/>
+        <CylinderTarget name="ToolMarker" sideLength="0.062900"/>
+        <ImageTarget name="newtoolmarker1" size="0.064000 0.128000"/>
+        <ImageTarget name="imageMarkerBig" size="0.102000 0.102000"/>
+        <ImageTarget name="TumorMarkerBigger.Bottom" size="0.089000 0.089000"/>
+        <ImageTarget name="TumorMarkerBigger.Front" size="0.089000 0.089000"/>
+        <ImageTarget name="TumorMarkerBigger.Top" size="0.089000 0.089000"/>
+        <ImageTarget name="TumorMarkerBigger.Right" size="0.089000 0.089000"/>
+        <ImageTarget name="TumorMarkerBigger.Back" size="0.089000 0.089000"/>
+        <ImageTarget name="TumorMarkerBigger.Left" size="0.089000 0.089000"/>
+        <ImageTarget name="TumorMarker.Bottom" size="0.050000 0.050000"/>
+        <ImageTarget name="TumorMarker.Front" size="0.050000 0.050000"/>
+        <ImageTarget name="TumorMarker.Top" size="0.050000 0.050000"/>
+        <ImageTarget name="TumorMarker.Right" size="0.050000 0.050000"/>
+        <ImageTarget name="TumorMarker.Back" size="0.050000 0.050000"/>
+        <ImageTarget name="TumorMarker.Left" size="0.050000 0.050000"/>
+        <MultiTarget name="TumorMarkerBigger">
+            <Part name="TumorMarkerBigger.Left" translation="-0.04450000077486038 0 0" rotation="AD: 0 1 0 -90"/>
+            <Part name="TumorMarkerBigger.Right" translation="0.04450000077486038 0 0" rotation="AD: 0 1 0 90"/>
+            <Part name="TumorMarkerBigger.Front" translation="0 0 0.04450000077486038" rotation="AD: 1 0 0 0"/>
+            <Part name="TumorMarkerBigger.Back" translation="0 0 -0.04450000077486038" rotation="AD: 0 1 0 180"/>
+            <Part name="TumorMarkerBigger.Top" translation="0 0.04450000077486038 0" rotation="AD: 1 0 0 -90"/>
+            <Part name="TumorMarkerBigger.Bottom" translation="0 -0.04450000077486038 0" rotation="AD: 1 0 0 90"/>
+        </MultiTarget>
+        <MultiTarget name="TumorMarker">
+            <Part name="TumorMarker.Left" translation="-0.02500000037252903 0 0" rotation="AD: 0 1 0 -90"/>
+            <Part name="TumorMarker.Right" translation="0.02500000037252903 0 0" rotation="AD: 0 1 0 90"/>
+            <Part name="TumorMarker.Front" translation="0 0 0.02500000037252903" rotation="AD: 1 0 0 0"/>
+            <Part name="TumorMarker.Back" translation="0 0 -0.02500000037252903" rotation="AD: 0 1 0 180"/>
+            <Part name="TumorMarker.Top" translation="0 0.02500000037252903 0" rotation="AD: 1 0 0 -90"/>
+            <Part name="TumorMarker.Bottom" translation="0 -0.02500000037252903 0" rotation="AD: 1 0 0 90"/>
+        </MultiTarget>
+    </Tracking>
+</QCARConfig>
