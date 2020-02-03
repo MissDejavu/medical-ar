@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,11 +18,12 @@ public class ToolCollider : MonoBehaviour
     readonly List<Vector3> vectorList = new List<Vector3>();
 
     //For raycasting
-    public float maxRayDistance = 0.2f; // 20cm 
+    public float maxRayDistance = 0.1f; // 10cm 
 
     void Awake()
     {
         //2D
+        
         vectorList.Add(Vector3.down); vectorList.Add(Vector3.left); vectorList.Add(Vector3.right); vectorList.Add(Vector3.forward); vectorList.Add(Vector3.back);
         vectorList.Add(new Vector3(-1, -1, 0)); vectorList.Add(new Vector3(1, -1, 0)); vectorList.Add(new Vector3(1, 0, 1)); vectorList.Add(new Vector3(-1, 0, 1)); 
         vectorList.Add(new Vector3(-1, 0, -1)); vectorList.Add(new Vector3(1, 0, -1)); vectorList.Add(new Vector3(0, -1, 1)); vectorList.Add(new Vector3(0, -1, -1));
@@ -43,6 +45,7 @@ public class ToolCollider : MonoBehaviour
         vectorList.Add(new Vector3(1, -0.25f, -1)); vectorList.Add(new Vector3(1, -1, -0.25f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.25f, -1, -1));
         vectorList.Add(new Vector3(0.25f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.25f));
 
+        
         vectorList.Add(new Vector3(-0.75f, -1, 0)); vectorList.Add(new Vector3(-1, -0.75f, 0)); vectorList.Add(new Vector3(0.75f, -1, 0)); vectorList.Add(new Vector3(1, -0.75f, 0));
         vectorList.Add(new Vector3(0.75f, 0, 1)); vectorList.Add(new Vector3(1, 0, 0.75f)); vectorList.Add(new Vector3(-0.75f, 0, 1)); vectorList.Add(new Vector3(-1f, 0, 0.75f));
         vectorList.Add(new Vector3(-0.75f, 0, -1)); vectorList.Add(new Vector3(-1, 0, -0.75f)); vectorList.Add(new Vector3(0.75f, 0, -1)); vectorList.Add(new Vector3(1, 0, -0.75f));
@@ -51,6 +54,7 @@ public class ToolCollider : MonoBehaviour
         vectorList.Add(new Vector3(-1, -0.75f, 1)); vectorList.Add(new Vector3(0.75f, -1, 1)); vectorList.Add(new Vector3(1, -0.75f, 1)); vectorList.Add(new Vector3(1, -1, 0.75f));
         vectorList.Add(new Vector3(1, -0.75f, -1)); vectorList.Add(new Vector3(1, -1, -0.75f)); vectorList.Add(new Vector3(-1, -1, -1)); vectorList.Add(new Vector3(-0.75f, -1, -1));
         vectorList.Add(new Vector3(0.75f, -1, -1)); vectorList.Add(new Vector3(-1f, -1, 0.75f));
+       
     }
 
     void Start()
@@ -65,13 +69,15 @@ public class ToolCollider : MonoBehaviour
     void Update()
     {
         // get all distances from rays
-        distancesTumor = MeasureDistanceToTumor(vectorList);
-        distancesVessel = MeasureDistanceToVessel(vectorList);
+        (distancesTumor, distancesVessel) = MeasureDistances(vectorList);
+        //distancesTumor = MeasureDistanceToTumor(vectorList);
+        //distancesVessel = MeasureDistanceToVessel(vectorList);
 
         // -------- DISTANCE TUMOR -------------
         if (distancesTumor.Count > 0)
         {
-            float minDistanceTumor = FindMinDistance(distancesTumor); // get smallest distance
+            //float minDistanceTumor = FindMinDistance(distancesTumor); // get smallest distance
+            float minDistanceTumor = distancesTumor.Min();
             HandleTumorDistance(minDistanceTumor); 
         }
         else
@@ -84,7 +90,8 @@ public class ToolCollider : MonoBehaviour
         //-----------DISTANCE OBSTACLES---------
         if (distancesVessel.Count > 0)
         {
-            float minDistanceVessel = FindMinDistance(distancesVessel); // get smallest distance
+            //float minDistanceVessel = FindMinDistance(distancesVessel); // get smallest distance
+            float minDistanceVessel = distancesVessel.Min();
             HandleObstacleDistance(minDistanceVessel);
         }
         else
@@ -217,21 +224,46 @@ public class ToolCollider : MonoBehaviour
     }
     */
 
-    List<float> MeasureDistanceToTumor(List<Vector3> vector3List)
+    (List<float>, List<float>) MeasureDistances(List<Vector3> vector3List)
     {
+        List<float> distancesTumor = new List<float>();
+        List<float> distancesVessel = new List<float>();
         RaycastHit hit;
-        List<float> distances = new List<float>();
         List<Ray> rays = new List<Ray>();
 
         foreach (Vector3 vector in vector3List)
         {
             rays.Add(new Ray(transform.position, transform.TransformDirection(vector)));
         }
-
         foreach (Ray ray in rays)
         {
             Debug.DrawRay(transform.position, ray.direction, Color.green, 0.1f, false);
             if (Physics.Raycast(ray, out hit, maxRayDistance))
+            {
+                if (hit.collider.name == "Tumor")
+                {
+                    distancesTumor.Add(hit.distance);
+                }
+                else if (hit.collider.name == "BloodVessel")
+                {
+                    distancesVessel.Add(hit.distance);
+                }
+            }
+        }
+
+        return (distancesTumor, distancesVessel);
+    }
+
+    
+    List<float> MeasureDistanceToTumor(List<Vector3> vector3List)
+    {
+        RaycastHit hit;
+        List<float> distances = new List<float>();
+
+        foreach (Vector3 vector in vector3List)
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(vector), Color.green, 0.1f, false);
+            if (Physics.Raycast(transform.position, transform.TransformDirection(vector), out hit, maxRayDistance))
             {
                 //Debug.Log("Distance to: " + hit.collider.name + " is: " + hit.distance);
                 if (hit.collider.name == "Tumor")
@@ -268,6 +300,7 @@ public class ToolCollider : MonoBehaviour
         }
         return (distances);
     }
+    
 
     float FindMinDistance(List<float> distances)
     {
