@@ -15,7 +15,7 @@ public class ResetPosition : MonoBehaviour
     // Update is called once per frame
     void OnGUI()
     {
-        if (GUI.Button (new Rect (850, 10, 100, 25), "Reset position"))
+        if (GUI.Button (new Rect (925, 10, 100, 25), "Reset position"))
         {
             transform.position = startPosition;
             transform.rotation = startRotation;

@@ -92,12 +92,12 @@ public class AudioManager : MonoBehaviour
         // check if sound is already playing - avoid restarting
         if (!s.source.isPlaying)
         {
-            Debug.Log("Start playing sound: " + name);
+            //Debug.Log("Start playing sound: " + name);
             s.source.Play();
         }
         else
         {
-            Debug.Log("Already playing sound: " + name);
+            //Debug.Log("Already playing sound: " + name);
         }
     }
 
@@ -109,7 +109,7 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
-        Debug.Log("Stopping sound: " + name);
+        //Debug.Log("Stopping sound: " + name);
         s.source.Stop();
     }
 

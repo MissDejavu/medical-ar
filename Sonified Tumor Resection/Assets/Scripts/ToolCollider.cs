@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -101,7 +102,7 @@ public class ToolCollider : MonoBehaviour
     // change sound in relation to tumor distance and update canvas
     void HandleTumorDistance(float distance)
     {
-        tumorDistance.text = "Distance to tumor: " + distance;  // update distance on canvas
+        tumorDistance.text = "Distance to tumor: " + System.Math.Round(distance*1000) + " mm";  // update distance on canvas
 
         // tumor area
         if(distance <= 0.004)  // TODO handle touching the tumor -> problem, no distance from rays
@@ -153,7 +154,7 @@ public class ToolCollider : MonoBehaviour
             audioManager.SetDistortionLevel(Constants.MarginsSound, scaledValueDist);
             audioManager.SetVolume(Constants.MarginsSound, 0.5f);
             //Debug.Log("scaledValue: " + scaledValue);
-            vesselDistance.text = "Close to vessel! (Distance:  " + distance + ")";
+            vesselDistance.text = "Close to vessel! (Distance:  " + System.Math.Round(distance*1000) + " mm" + ")";
         }
         else
         {
